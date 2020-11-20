@@ -30,11 +30,9 @@ public interface Bearable {
 	
 	public boolean isFullscreen();
 	
+	public boolean isFauxFullscreen();
+	
 	public boolean isResizable();
-	
-	public int getWindowWidth();
-	
-	public int getWindowHeight();
 	
 	public boolean isvSync();
 	

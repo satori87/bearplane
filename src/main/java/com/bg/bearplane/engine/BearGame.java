@@ -99,11 +99,19 @@ public class BearGame extends com.badlogic.gdx.Game {
 
 	public LwjglApplicationConfiguration getApplicationConfiguration() {
 		String name = game.getGameName();
-		int windowWidth = game.getWindowWidth();
-		int windowHeight = game.getWindowHeight();
+		int windowWidth;
+		int windowHeight;
 		boolean fullscreen = game.isFullscreen();
 		boolean resizable = game.isResizable();
 		boolean vSync = game.isvSync();		
+		Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();	
+		if(!game.isFauxFullscreen() && !game.isFullscreen()) {
+			windowWidth = game.getGameWidth();
+			windowHeight = game.getGameHeight();
+		} else {			
+			windowWidth = dimension.width;
+			windowHeight = dimension.height;
+		}		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		try {
 			cfg.addIcon(game.getNecessitiesPath() + "/icon.png", FileType.Local);
