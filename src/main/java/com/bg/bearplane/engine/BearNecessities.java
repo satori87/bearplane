@@ -1,5 +1,8 @@
 package com.bg.bearplane.engine;
 
+import java.io.File;
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -28,7 +31,9 @@ public class BearNecessities implements BearEssentials {
 	public int[] fontX;
 	public final AssetManager manager = new AssetManager();
 	Texture texture;
-
+	public static HashMap<String, Texture> textures = new HashMap<String, Texture>();
+	public HashMap<String, String> textureList = new HashMap<String, String>();
+	
 	public void preloadNecessities() {
 		try {
 			for (int i = 0; i < 5; i++) {
@@ -42,6 +47,26 @@ public class BearNecessities implements BearEssentials {
 		}
 	}
 
+	public void loadAllPNGFromDir(String d) {
+		try {
+			File f = new File(new File(".").getCanonicalPath() + "/" + d);
+			File[] fileList = f.listFiles();
+			String s;
+			for (File ff : fileList) {
+				if (!ff.isDirectory()) {
+					s = ff.getName();
+					if (s.substring(s.length() - 4).equals(".png")) {
+						s = s.substring(0, s.length() - 4);
+						textureList.put(s, d + "/" + s + ".png");
+						manager.load(d + "/" + s + ".png", Texture.class);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void loadNecessities() {
 		try {
 			int i = 0;
