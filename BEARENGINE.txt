@@ -1,0 +1,49 @@
+1.make a game object and implement Bearable. Optionally, inherit TCPClient and implement BearNet
+2.make an assets object and inherit BearNecessities and implement BearAssets
+3. The game will automatically load assets and call game.loaded() when  initialization and loading is done. Game contains a LoadScene with basic progress bar, extend it to replace it
+
+implement the interface methods and setup main like this:
+
+
+public static void main(String[] args) {
+	try {
+		Log.init(args);
+		// ALL YOU HAVE TO DO IS POINT AT GAME OBJECT AND ASSET OBJECT BELOW
+		Assets assets = new Assets();
+		Bearable game = new Odyssey(assets);
+		BearGame gdxGame = new BearGame(game, assets);
+	
+		LwjglApplicationConfiguration c = BearGame.getApplicationConfiguration(gdxGame.game.getGameName(), gdxGame.game.getGameWidth(), gdxGame.game.getGameHeight(), false, false);
+			
+		new LwjglApplication(gdxGame, c);
+			
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+}
+
+
+con = DriverManager.getConnection("jdbc:mysql://localhost:3306/odyssey", "bear",
+					"%Pb?fYW@ydP9RLqeTnfSW-u!23c$f=%#");
+
+In your game object, you have to add your scenes in addScenes like this:
+@Override
+public void addScenes() {
+	Scene.addScene("menu", new MenuScene());
+	Scene.addScene("login", new LoginScene());
+	Scene.addScene("character", new CharacterScene());
+	Scene.addScene("newCharacter", new NewCharacterScene());
+	Scene.addScene("editMap", new MapScene());
+}
+
+In your Assets object, this is how a preload would look:
+public void preload() {
+	cursor[0] = Gdx.graphics.newCursor(new Pixmap(Gdx.files.local("assets/cur0.png")), 0, 0);
+	manager.load("assets/tiles/buildings.png", Texture.class);
+        someTexture = loadLocalTexture(filename); //dont preload, just load it (need it for load screen)
+}
+public void load() {
+	tiles.put("buildings", manager.get("assets/tiles/buildings.png"));
+}
+
+Then just extend Scene to make individual Scenes and use Scene.change("scene name") to switch between them. Scene contains draw() drawRegion() drawFont() and interface classes to use
