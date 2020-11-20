@@ -1,7 +1,5 @@
 package com.bg.bearplane.engine;
 
-import static com.bg.bearplane.engine.BearNecessities.effectnames;
-
 import java.io.File;
 import java.util.HashMap;
 

@@ -27,5 +27,17 @@ public interface Bearable {
 	public String getEffectsPath();
 	
 	public String getNecessitiesPath();
+	
+	public boolean isFullscreen();
+	
+	public boolean isResizable();
+	
+	public int getWindowWidth();
+	
+	public int getWindowHeight();
+	
+	public boolean isvSync();
+	
+	public BearNecessities getAssets();
 
 }

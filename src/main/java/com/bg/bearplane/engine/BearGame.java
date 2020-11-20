@@ -3,6 +3,7 @@ package com.bg.bearplane.engine;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.bg.bearplane.gui.Scene;
 import com.bg.bearplane.net.NetworkRegistrar;
@@ -15,10 +16,10 @@ public class BearGame extends com.badlogic.gdx.Game {
 	public static BearNecessities assets;
 	public NetworkRegistrar network;
 
-	public BearGame(Bearable theGame, BearNecessities assets, NetworkRegistrar network) {
+	public BearGame(Bearable theGame, NetworkRegistrar network) {
 		super();
 		game = theGame;
-		BearGame.assets = assets;
+		BearGame.assets = game.getAssets();
 		this.network = network;
 	}
 
@@ -96,33 +97,33 @@ public class BearGame extends com.badlogic.gdx.Game {
 		return 0;
 	}
 
-	public static LwjglApplicationConfiguration getApplicationConfiguration(String name, int gameWidth, int gameHeight,
-			boolean fullscreen, boolean resizable) {
+	public LwjglApplicationConfiguration getApplicationConfiguration() {
+		String name = game.getGameName();
+		int windowWidth = game.getWindowWidth();
+		int windowHeight = game.getWindowHeight();
+		boolean fullscreen = game.isFullscreen();
+		boolean resizable = game.isResizable();
+		boolean vSync = game.isvSync();		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		try {
+			cfg.addIcon(game.getNecessitiesPath() + "/icon.png", FileType.Local);
 			cfg.title = name;
-			cfg.width = gameWidth;
-			cfg.height = gameHeight;
+			cfg.width = windowWidth;
+			cfg.height = windowHeight;
 			cfg.resizable = resizable;
-			//cfg.width = 1366;
-			//cfg.height = 768;
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			cfg.y = screenSize.height / 2 - cfg.height / 2 - 32;
 			cfg.x = 0;
 			cfg.y = 0;
 	        cfg.resizable = false;
 	        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
-	       // cfg.vSyncEnabled = false;
-	        //cfg.foregroundFPS = 60;
-	        //cfg.backgroundFPS = 60;
+	        cfg.vSyncEnabled = vSync;
+	        cfg.fullscreen = fullscreen;
 			if (fullscreen) {
-				double width = screenSize.getWidth();
-				double height = screenSize.getHeight();
 				cfg.fullscreen = true;
-				cfg.width = (int) Math.round(width);
-				cfg.height = (int) Math.round(height);
+				cfg.width = (int) Math.round(screenSize.getWidth());
+				cfg.height = (int) Math.round(screenSize.getHeight());
 				cfg.resizable = false;
-
 			}
 		} catch (Exception e) {
 			Log.error(e);
