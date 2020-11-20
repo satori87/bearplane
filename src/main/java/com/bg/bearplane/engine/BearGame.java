@@ -16,11 +16,11 @@ public class BearGame extends com.badlogic.gdx.Game {
 	public static BearNecessities assets;
 	public NetworkRegistrar network;
 
-	public BearGame(Bearable theGame, NetworkRegistrar network) {
+	public BearGame(Bearable theGame) {
 		super();
 		game = theGame;
 		BearGame.assets = game.getAssets();
-		this.network = network;
+		this.network = (NetworkRegistrar)game.getNetwork();
 	}
 
 	@Override

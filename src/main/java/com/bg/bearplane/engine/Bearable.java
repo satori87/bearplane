@@ -39,5 +39,7 @@ public interface Bearable {
 	public boolean isvSync();
 	
 	public BearNecessities getAssets();
+	
+	public Object getNetwork();
 
 }
