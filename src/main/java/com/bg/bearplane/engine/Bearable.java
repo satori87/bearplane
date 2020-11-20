@@ -23,5 +23,9 @@ public interface Bearable {
 	public void doTimer(int interval);
 	
 	public String getClientVersion();
+	
+	public String getEffectsPath();
+	
+	public String getNecessitiesPath();
 
 }
