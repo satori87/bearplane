@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class BearMinimumLog {
 	/** No logging at all. */
-	static public final int LEVEL_NONE = 6;
+	static public final int LEVEL_NONE = 7;
 	/** Critical errors. The application may no longer work correctly. */
 	static public final int LEVEL_ERROR = 5;
 	/** Important warnings. The application will continue to work correctly. */
@@ -32,7 +32,7 @@ public class BearMinimumLog {
 	 * below as "final" will cause the compiler to remove all "if (Log.info) ..."
 	 * type statements below the set level.
 	 */
-	static private int level = LEVEL_INFO;
+	static private int level = LEVEL_DEBUG;
 
 	/** True when the ERROR level will be logged. */
 	static public boolean ERROR = level <= LEVEL_ERROR;

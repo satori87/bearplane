@@ -9,20 +9,16 @@ public class Effect {
 	public PooledEffect fx;
 	public int x = 0; // att location
 	public int y = 0;
-	public int modX = 0;
-	public int modY = 0;
 	public int i = 0;
 	public boolean visible = true;
 	public float scale = 0;
 
-	public Effect(int id, int type, int i, int x, int y, int modX, int modY, float scale) {
+	public Effect(int id, int type, int i, int x, int y, float scale) {
 		this.id = id;
 		this.type = type;
 		this.i = i;
 		this.x = x;
 		this.y = y;
-		this.modX = modX;
-		this.modY = modY;
 	}
 
 	public DrawTask render() {
@@ -30,7 +26,7 @@ public class Effect {
 	}
 	
 	public int getTrueY() {
-		return y * 32 + 16 + modY;
+		return y;
 	}
 
 }

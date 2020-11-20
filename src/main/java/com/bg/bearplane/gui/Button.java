@@ -2,8 +2,8 @@ package com.bg.bearplane.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.bg.bearplane.engine.BearGame;
-import com.bg.bearplane.engine.BearTool;
+import com.bg.bearplane.engine.Bearplane;
+import com.bg.bearplane.engine.Util;
 import com.bg.bearplane.engine.Log;
 
 public class Button extends Component {
@@ -48,7 +48,7 @@ public class Button extends Component {
 				return;
 			}
 			if (Scene.input.mouseDown[0]) {
-				if (BearTool.inCenteredBox(mX, mY, x, y, width, height)) {
+				if (Util.inCenteredBox(mX, mY, x, y, width, height)) {
 					if (Scene.input.wasMouseJustClicked[0]) {
 						Scene.input.wasMouseJustClicked[0] = false;
 						click();
@@ -65,7 +65,7 @@ public class Button extends Component {
 					click = false;
 				}
 			} else if (Scene.input.mouseDown[1]) {
-				if (BearTool.inCenteredBox(mX, mY, x, y, width, height)) {
+				if (Util.inCenteredBox(mX, mY, x, y, width, height)) {
 					if (Scene.input.wasMouseJustClicked[1]) {
 						Scene.input.wasMouseJustClicked[1] = false;
 						for (int i = 0; i < interval; i++) {
@@ -113,7 +113,7 @@ public class Button extends Component {
 			// render thyself, peasant
 			x -= (width / 2);
 			y -= (height / 2);
-			TextureRegion[][] button = BearGame.assets.button;
+			TextureRegion[][] button = Bearplane.assets.button;
 			int p = 0;
 			if (click || sel || disabled || (toggle && toggled)) {
 				p = 1;
@@ -121,7 +121,7 @@ public class Button extends Component {
 				p = 0;
 			}
 			for (int a = 8; a < height - 8; a += 8) {
-				scene.draw(BearGame.assets.bg[p == 1 ? 3 : 4], x + 4, y + 4, 0, 0, width - 8, height - 8);
+				scene.draw(Bearplane.assets.bg[p == 1 ? 3 : 4], x + 4, y + 4, 0, 0, width - 8, height - 8);
 			}
 			// draw top left
 			scene.drawRegion(button[p][0], x, y, false, 0, 1);

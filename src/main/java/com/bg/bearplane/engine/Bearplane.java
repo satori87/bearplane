@@ -9,23 +9,25 @@ import com.bg.bearplane.gui.Scene;
 import com.bg.bearplane.net.NetworkRegistrar;
 import com.bg.bearplane.net.TCPClient;
 
-public class BearGame extends com.badlogic.gdx.Game {
+public class Bearplane extends com.badlogic.gdx.Game {
 
 	public static Bearable game;
 	public BearScreen gameScreen;
-	public static BearNecessities assets;
+	public static StandardAssets assets;
 	public NetworkRegistrar network;
 
-	public BearGame(Bearable theGame) {
-		super();
-		game = theGame;
-		BearGame.assets = game.getAssets();
+	public Bearplane(Bearable theGame, String[] args) {		
+		super();		
+		game = theGame;		
+		assets = game.getAssets();
+		Log.init(args);
 		this.network = (NetworkRegistrar)game.getNetwork();
 	}
 
 	@Override
 	public void create() {
 		try {
+			game.create();
 			Scene.init();
 			if (game instanceof TCPClient) {
 				TCPClient c = (TCPClient) game;
@@ -101,34 +103,31 @@ public class BearGame extends com.badlogic.gdx.Game {
 		String name = game.getGameName();
 		int windowWidth;
 		int windowHeight;
-		boolean fullscreen = game.isFullscreen();
-		boolean resizable = game.isResizable();
-		boolean vSync = game.isvSync();		
+		int dm = game.getDisplayMode();
 		Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();	
-		if(!game.isFauxFullscreen() && !game.isFullscreen()) {
-			windowWidth = game.getGameWidth();
-			windowHeight = game.getGameHeight();
+		if(dm == DisplayMode.WINDOW) {
+			windowWidth = game.getWindowWidth();
+			windowHeight = game.getWindowHeight();
 		} else {			
 			windowWidth = dimension.width;
 			windowHeight = dimension.height;
 		}		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		try {
-			cfg.addIcon(game.getNecessitiesPath() + "/icon.png", FileType.Local);
+			cfg.addIcon(game.getAssetsPath() + "/icon.png", FileType.Local);
 			cfg.title = name;
 			cfg.width = windowWidth;
 			cfg.height = windowHeight;
-			cfg.resizable = resizable;
+			cfg.resizable = game.isResizable();
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			cfg.y = screenSize.height / 2 - cfg.height / 2 - 32;
 			cfg.x = 0;
 			cfg.y = 0;
 	        cfg.resizable = false;
 	        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
-	        cfg.vSyncEnabled = vSync;
-	        cfg.fullscreen = fullscreen;
-			if (fullscreen) {
-				cfg.fullscreen = true;
+	        cfg.vSyncEnabled = game.isvSync();
+	        cfg.fullscreen = dm == DisplayMode.FULLSCREEN;
+			if (cfg.fullscreen) {
 				cfg.width = (int) Math.round(screenSize.getWidth());
 				cfg.height = (int) Math.round(screenSize.getHeight());
 				cfg.resizable = false;

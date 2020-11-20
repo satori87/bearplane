@@ -13,19 +13,15 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntMap;
 
-public class BearNecessities implements BearEssentials {
+public abstract class StandardAssets {
 
 	public TextureRegion[] framePiece;
 	Texture frameTex;
 	public TextureRegion[] checkBox = new TextureRegion[2];
-
-	public TextureRegion frameTitle;
-	
+	public TextureRegion frameTitle;	
 	public TextureRegion[][] arrowButton = new TextureRegion[2][4];
-
 	public TextureRegion[] sliderBar = new TextureRegion[3];
 	public TextureRegion[] sliderPiece = new TextureRegion[2];
-
 	public TextureRegion[][] button;
 	public TextureRegion[][] field; // lit, section
 	public TextureRegion[][] font; // type, ascii code
@@ -36,7 +32,6 @@ public class BearNecessities implements BearEssentials {
 	Texture texture;
 	public static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	public HashMap<String, String> textureList = new HashMap<String, String>();
-
 	public static IntMap<ParticleEffect> effectData = new IntMap<ParticleEffect>();
 	public static IntMap<ParticleEffectPool> effectPool = new IntMap<ParticleEffectPool>();
 	static String[] effectnames;
@@ -44,19 +39,19 @@ public class BearNecessities implements BearEssentials {
 	public void preloadNecessities() {
 		try {
 			for (int i = 0; i < 5; i++) {
-				manager.load(BearGame.game.getNecessitiesPath() + "/bg" + i + ".png", Texture.class);
+				manager.load(Bearplane.game.getAssetsPath() + "/bg" + i + ".png", Texture.class);
 			}
 			loadFont();
-			manager.load(BearGame.game.getNecessitiesPath() + "/frame.png", Texture.class);
+			manager.load(Bearplane.game.getAssetsPath() + "/frame.png", Texture.class);
 		
 			File f = null;
-			f = new File(new File(".").getCanonicalPath() + BearGame.game.getEffectsPath());
+			f = new File(new File(".").getCanonicalPath() + Bearplane.game.getEffectsPath());
 			if (f != null) {
 				effectnames = f.list();
 				if (effectnames != null) {
 					for (String s : effectnames) {
 						if (s.substring(s.length() - 2).equals(".p")) {
-							manager.load(BearGame.game.getEffectsPath() + "/" + s, ParticleEffect.class);
+							manager.load(Bearplane.game.getEffectsPath() + "/" + s, ParticleEffect.class);
 						}
 					}
 				}
@@ -67,7 +62,7 @@ public class BearNecessities implements BearEssentials {
 		}
 	}
 
-	public void loadAllPNGFromDir(String d) {
+	protected void preloadAllPNGFromDir(String d) {
 		try {
 			File f = new File(new File(".").getCanonicalPath() + "/" + d);
 			File[] fileList = f.listFiles();
@@ -91,9 +86,9 @@ public class BearNecessities implements BearEssentials {
 		try {
 			int i = 0;
 			for (i = 0; i < 5; i++) {
-				bg[i] = manager.get(BearGame.game.getNecessitiesPath() + "/bg" + i + ".png");
+				bg[i] = manager.get(Bearplane.game.getAssetsPath() + "/bg" + i + ".png");
 			}
-			texture = manager.get(BearGame.game.getNecessitiesPath() + "/frame.png");
+			texture = manager.get(Bearplane.game.getAssetsPath() + "/frame.png");
 			frameTex = texture;
 			framePiece = new TextureRegion[8];
 			for (i = 0; i < 8; i++) {
@@ -152,7 +147,7 @@ public class BearNecessities implements BearEssentials {
 				for (String s : effectnames) {
 					if (s.substring(s.length() - 2).equals(".p")) {
 						n = s.substring(0, s.length() - 2);
-						ParticleEffect pe = manager.get(BearGame.game.getEffectsPath() + "/" + s);
+						ParticleEffect pe = manager.get(Bearplane.game.getEffectsPath() + "/" + s);
 						pe.flipY();
 						effectData.put(Integer.parseInt(n), pe);
 						ParticleEffectPool pec = new ParticleEffectPool(pe, 1, 20);
@@ -166,10 +161,10 @@ public class BearNecessities implements BearEssentials {
 		}
 	}
 
-	public Texture loadLocalTexture(String name) {
+	protected Texture loadLocalTexture(String name) {
 		Texture texture = null;
 		try {
-			FileHandle fh = Gdx.files.local(BearGame.game.getNecessitiesPath() + "/" + name + ".png");
+			FileHandle fh = Gdx.files.local(Bearplane.game.getAssetsPath() + "/" + name + ".png");
 			if (fh.exists()) {
 				texture = new Texture(fh);
 			}
@@ -180,19 +175,19 @@ public class BearNecessities implements BearEssentials {
 		return texture;
 	}
 
-	public TextureRegion newTR(Texture tex, int x, int y, int w, int h) {
+	private TextureRegion newTR(Texture tex, int x, int y, int w, int h) {
 		TextureRegion t = new TextureRegion(tex, x, y, w, h);
 		fix(t, false, true);
 		return t;
 	}
 
-	public void fix(TextureRegion tex, boolean flipX, boolean flipY) {
+	private void fix(TextureRegion tex, boolean flipX, boolean flipY) {
 		fixBleeding(tex);
 		tex.flip(flipX, flipY);
 		tex.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	}
 
-	public void fixBleeding(TextureRegion region) {
+	private void fixBleeding(TextureRegion region) {
 		float fix = 0.01f;
 		float x = region.getRegionX();
 		float y = region.getRegionY();
@@ -222,7 +217,7 @@ public class BearNecessities implements BearEssentials {
 		return total;
 	}
 
-	public void loadFont() {
+	private void loadFont() {
 		int i = 0;
 		Texture texture = loadLocalTexture("font");
 		font = new TextureRegion[2][256];
@@ -257,16 +252,8 @@ public class BearNecessities implements BearEssentials {
 		}
 	}
 
-	@Override
-	public void preload() {
-		// TODO Auto-generated method stub
+	public abstract void preload();
 
-	}
-
-	@Override
-	public void load() {
-		// TODO Auto-generated method stub
-
-	}
+	public abstract void load();
 
 }

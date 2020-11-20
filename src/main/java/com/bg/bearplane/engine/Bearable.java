@@ -2,6 +2,8 @@ package com.bg.bearplane.engine;
 
 public interface Bearable {
 
+	public void create();
+	
 	public void update();
 	
 	public void dispose();
@@ -26,18 +28,22 @@ public interface Bearable {
 	
 	public String getEffectsPath();
 	
-	public String getNecessitiesPath();
+	public String getAssetsPath();
 	
-	public boolean isFullscreen();
-	
-	public boolean isFauxFullscreen();
-	
+	public int getDisplayMode();
+		
 	public boolean isResizable();
+	
+	public int getWindowWidth();
+	
+	public int getWindowHeight();
 	
 	public boolean isvSync();
 	
-	public BearNecessities getAssets();
+	public StandardAssets getAssets();
 	
 	public Object getNetwork();
+	
+	public boolean isRelease();
 
 }

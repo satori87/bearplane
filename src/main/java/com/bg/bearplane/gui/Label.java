@@ -1,7 +1,7 @@
 package com.bg.bearplane.gui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.bg.bearplane.engine.BearTool;
+import com.bg.bearplane.engine.Util;
 
 public class Label extends Component {
 
@@ -39,7 +39,7 @@ public class Label extends Component {
 		}
 		if (wrap) {
 			int u = 0;
-			for (String b : BearTool.wrapText(2, wrapw, text)) {
+			for (String b : Util.wrapText(2, wrapw, text)) {
 				scene.drawFont(0, x, y + u * 30, b, false, scale, Color.WHITE);
 				u++;
 			}

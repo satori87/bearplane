@@ -14,10 +14,10 @@ public class LoadScene extends Scene {
 	}
 
 	public void update() {
-		BearGame.updateAssetManager();
-		if (BearGame.isAssetLoadingDone()) {
-			BearGame.loadAssets();
-			BearGame.loaded();
+		Bearplane.updateAssetManager();
+		if (Bearplane.isAssetLoadingDone()) {
+			Bearplane.loadAssets();
+			Bearplane.loaded();
 		} else {
 			super.update();
 		}
@@ -27,7 +27,7 @@ public class LoadScene extends Scene {
 		super.render();
 		if (tick > update) {
 			update = tick + 100;
-			progress = BearGame.getAssetLoadProgress();
+			progress = Bearplane.getAssetLoadProgress();
 		}
 		drawFont(0, game.getGameWidth() / 2, game.getGameHeight() / 2, (int) (progress * 100f) + "%", true, 3f);
 

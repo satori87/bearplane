@@ -18,11 +18,17 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-public class BearTool {
+public class Util {
 
-	public class Position {
-		public int x;
-		public int y;
+	public class Coord {
+
+		public int x, y;
+
+		public Coord(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
 	}
 	
 	public static double distance(int x1, int y1, int x2, int y2) {
@@ -202,7 +208,7 @@ public class BearTool {
 			String p = text.substring(c, c + 1); // single letter
 			if (p.equals(" ")) { // finished a word, try to add it on
 				if (line.length() > 0) {
-					if (BearGame.assets.getStringWidth(line + " " + word, scale, 0, 1) > width) { // wont fit, start new
+					if (Bearplane.assets.getStringWidth(line + " " + word, scale, 0, 1) > width) { // wont fit, start new
 																									// line
 						lines.add(line);
 						line = word;
@@ -212,7 +218,7 @@ public class BearTool {
 						word = "";
 					}
 				} else { // we're on first word of line, is it too wide?
-					if (BearGame.assets.getStringWidth(word, scale, 0, 1) > width) {
+					if (Bearplane.assets.getStringWidth(word, scale, 0, 1) > width) {
 						line = word + " ";
 						word = "";
 					} else {
@@ -221,13 +227,13 @@ public class BearTool {
 					}
 				}
 			} else {
-				if (line.length() == 0 && BearGame.assets.getStringWidth(word + p, scale, 0, 1) > width) {
+				if (line.length() == 0 && Bearplane.assets.getStringWidth(word + p, scale, 0, 1) > width) {
 					// first word is too wide, split it. i.e. AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 					lines.add(word);
 					word = "";
 					word = p;
 				} else if (line.length() > 0
-						&& BearGame.assets.getStringWidth(line + " " + word + p, scale, 0, 1) > width) {
+						&& Bearplane.assets.getStringWidth(line + " " + word + p, scale, 0, 1) > width) {
 					lines.add(line);
 					line = "";
 					word += p;

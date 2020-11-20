@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.bg.bearplane.engine.BearGame;
+import com.bg.bearplane.engine.Bearplane;
 
 public class Frame extends Component {
 
@@ -103,10 +103,10 @@ public class Frame extends Component {
 			this.x += parent.x;
 			this.y += parent.y;
 		}
-		TextureRegion[] framePiece = BearGame.assets.framePiece;
+		TextureRegion[] framePiece = Bearplane.assets.framePiece;
 
 		if (useBackground) {
-			scene.draw(BearGame.assets.bg[1], x + 4, y + 4, width - 8, height - 8, 0, 0, width, height);
+			scene.draw(Bearplane.assets.bg[1], x + 4, y + 4, width - 8, height - 8, 0, 0, width, height);
 		}
 		if (useFrame) {
 			// draw top left

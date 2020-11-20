@@ -6,7 +6,7 @@ import java.awt.datatransfer.DataFlavor;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.bg.bearplane.engine.BearGame;
+import com.bg.bearplane.engine.Bearplane;
 import com.bg.bearplane.engine.Log;
 
 public class TextBox extends Component {
@@ -322,11 +322,11 @@ public class TextBox extends Component {
 			// render thyself, peasant
 			int l = 0;
 			int sx = 12;
-			scene.drawRegion(BearGame.assets.field[l][0], x, y, false, 0, 2);
+			scene.drawRegion(Bearplane.assets.field[l][0], x, y, false, 0, 2);
 			for (int b = sx; b <= width + 8; b += 8) {
-				scene.drawRegion(BearGame.assets.field[l][1], x + b, y, false, 0, 2);
+				scene.drawRegion(Bearplane.assets.field[l][1], x + b, y, false, 0, 2);
 			}
-			scene.drawRegion(BearGame.assets.field[l][2], sx + 6 + x + width - 6, y, false, 0, 2);
+			scene.drawRegion(Bearplane.assets.field[l][2], sx + 6 + x + width - 6, y, false, 0, 2);
 			float len = 0;
 			if (password) {
 				String p = "";
@@ -334,10 +334,10 @@ public class TextBox extends Component {
 					p += "*";
 				}
 				scene.drawFont(0, sx + x + width / 2, y + 28 - 2, p, true, 1.6f, Color.WHITE);
-				len = BearGame.assets.getStringWidth(p, 1.6f, 1, 0);
+				len = Bearplane.assets.getStringWidth(p, 1.6f, 1, 0);
 			} else {
 				scene.drawFont(0, sx + x + width / 2, y + 28 - 2, text, true, 1.6f, Color.WHITE);
-				len = BearGame.assets.getStringWidth(text, 1.6f, 1, 0);
+				len = Bearplane.assets.getStringWidth(text, 1.6f, 1, 0);
 			}
 			if (focus && blink) {
 				scene.drawFont(0, sx + (int) (x + width / 2 + len / 2), y + 28 - 2, "|", true, 1.6f, Color.WHITE);

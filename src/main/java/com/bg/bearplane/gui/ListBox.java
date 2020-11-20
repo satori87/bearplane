@@ -2,8 +2,8 @@ package com.bg.bearplane.gui;
 
 import java.util.ArrayList;
 import com.badlogic.gdx.Input.Keys;
-import com.bg.bearplane.engine.BearGame;
-import com.bg.bearplane.engine.BearTool;
+import com.bg.bearplane.engine.Bearplane;
+import com.bg.bearplane.engine.Util;
 import com.bg.bearplane.engine.Log;
 
 public class ListBox extends Component {
@@ -50,7 +50,7 @@ public class ListBox extends Component {
 				}
 			}
 
-			if (BearTool.inBox(sx, sy, x + 5, x + 5 + width, y + 5, y + 5 + height)) {
+			if (Util.inBox(sx, sy, x + 5, x + 5 + width, y + 5, y + 5 + height)) {
 				if (Scene.input.keyDown[Keys.PAGE_DOWN]) {
 					setScroll(scroll + 10);
 				}
@@ -108,7 +108,7 @@ public class ListBox extends Component {
 				} else {
 					t = 4;
 				}
-				scene.draw(BearGame.assets.bg[t], x, y + 5 + i * 20, 0, y + 5 + i * 20, width, 20);
+				scene.draw(Bearplane.assets.bg[t], x, y + 5 + i * 20, 0, y + 5 + i * 20, width, 20);
 				if (ii < list.size()) {
 					scene.drawFont(0, x + 10, y + 5 + i * 20 + 3, list.get(ii), false, 1);
 				}

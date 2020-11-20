@@ -20,8 +20,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-import com.bg.bearplane.engine.BearGame;
-import com.bg.bearplane.engine.BearTool;
+import com.bg.bearplane.engine.Bearplane;
+import com.bg.bearplane.engine.Util;
 import com.bg.bearplane.engine.Log;
 
 public abstract class Scene {
@@ -89,7 +89,7 @@ public abstract class Scene {
 		try {
 			input = new InputHandler();
 			Gdx.input.setInputProcessor(input);
-			setupScreen(BearGame.game.getGameWidth(), BearGame.game.getGameHeight());
+			setupScreen(Bearplane.game.getGameWidth(), Bearplane.game.getGameHeight());
 		} catch (Exception e) {
 			Log.error(e);
 			System.exit(0);
@@ -187,12 +187,12 @@ public abstract class Scene {
 			if (msgBoxFrame != null) {
 				msgBoxFrame.renderComponent();
 				String ss = msgBoxMsgs.get(0);
-				List<String> lines = BearTool.wrapText(2f, BearGame.game.getGameWidth() / 2, ss);
+				List<String> lines = Util.wrapText(2f, Bearplane.game.getGameWidth() / 2, ss);
 				int i = 0;
 				for (String s : lines) {
 					i++;
-					scene.drawFontAbs(0, BearGame.game.getGameWidth() / 2,
-							BearGame.game.getGameHeight() / 2 - 170 + i * 40, s, true, 2.0f);
+					scene.drawFontAbs(0, Bearplane.game.getGameWidth() / 2,
+							Bearplane.game.getGameHeight() / 2 - 170 + i * 40, s, true, 2.0f);
 				}
 			}
 			batcher.end();
@@ -229,7 +229,7 @@ public abstract class Scene {
 			System.exit(0);
 		}
 		if (autoCenter) {
-			moveCameraTo(BearGame.game.getGameWidth() / 2, BearGame.game.getGameHeight() / 2);
+			moveCameraTo(Bearplane.game.getGameWidth() / 2, Bearplane.game.getGameHeight() / 2);
 		}
 	}
 
@@ -378,8 +378,8 @@ public abstract class Scene {
 
 	public void drawAbs(Texture t, int x, int y, int w, int h, int srcX, int srcY, int srcW, int srcH) {
 		try {
-			batcher.draw(t, x + curCam.position.x - BearGame.game.getGameWidth() / 2,
-					y + curCam.position.y - BearGame.game.getGameHeight() / 2, w, h, srcX, srcY, srcW, srcH, false,
+			batcher.draw(t, x + curCam.position.x - Bearplane.game.getGameWidth() / 2,
+					y + curCam.position.y - Bearplane.game.getGameHeight() / 2, w, h, srcX, srcY, srcW, srcH, false,
 					true);
 		} catch (Exception e) {
 			Log.error(e);
@@ -479,7 +479,7 @@ public abstract class Scene {
 			float oX, oY;
 			// get a quick count of width
 			if (centered) {
-				total = BearGame.assets.getStringWidth(s, scale, padding, spacing);
+				total = Bearplane.assets.getStringWidth(s, scale, padding, spacing);
 				oX = Math.round(-total / 2);
 				oY = Math.round((scale * -16.0f) / 2);
 			} else {
@@ -489,12 +489,12 @@ public abstract class Scene {
 			batcher.setColor(col);
 			for (char c : s.toCharArray()) {
 				int ascii = (int) c;
-				if (BearGame.assets.fontWidth[ascii] > 0) {
-					drawRegion(BearGame.assets.font[type][ascii],
-							Math.round(curX + padding + oX + curCam.position.x - BearGame.game.getGameWidth() / 2),
-							Math.round(Y + oY + curCam.position.y - BearGame.game.getGameHeight() / 2), false, 0,
+				if (Bearplane.assets.fontWidth[ascii] > 0) {
+					drawRegion(Bearplane.assets.font[type][ascii],
+							Math.round(curX + padding + oX + curCam.position.x - Bearplane.game.getGameWidth() / 2),
+							Math.round(Y + oY + curCam.position.y - Bearplane.game.getGameHeight() / 2), false, 0,
 							scale);
-					curX += BearGame.assets.fontWidth[ascii] * scale + padding * 2 + spacing;
+					curX += Bearplane.assets.fontWidth[ascii] * scale + padding * 2 + spacing;
 				}
 			}
 			batcher.setColor(Color.WHITE);
@@ -520,7 +520,7 @@ public abstract class Scene {
 			float oX, oY;
 			// get a quick count of width
 			if (centered) {
-				total = BearGame.assets.getStringWidth(s, scale, padding, spacing);
+				total = Bearplane.assets.getStringWidth(s, scale, padding, spacing);
 				oX = Math.round(-total / 2);
 				oY = Math.round((scale * -16.0f) / 2);
 			} else {
@@ -530,10 +530,10 @@ public abstract class Scene {
 			batcher.setColor(col);
 			for (char c : s.toCharArray()) {
 				int ascii = (int) c;
-				if (BearGame.assets.fontWidth[ascii] > 0) {
-					drawRegion(BearGame.assets.font[type][ascii], Math.round(curX + padding + oX), Math.round(Y + oY),
+				if (Bearplane.assets.fontWidth[ascii] > 0) {
+					drawRegion(Bearplane.assets.font[type][ascii], Math.round(curX + padding + oX), Math.round(Y + oY),
 							false, 0, scale);
-					curX += BearGame.assets.fontWidth[ascii] * scale + padding * 2 + spacing;
+					curX += Bearplane.assets.fontWidth[ascii] * scale + padding * 2 + spacing;
 				}
 			}
 			batcher.setColor(Color.WHITE);
@@ -559,8 +559,8 @@ public abstract class Scene {
 
 	private static void letterBox() {
 		try {
-			int x = Math.round(cam.position.x) - Math.round(BearGame.game.getGameWidth() / 2 + originX);
-			int y = Math.round(cam.position.y) - Math.round(BearGame.game.getGameHeight() / 2 + originY);
+			int x = Math.round(cam.position.x) - Math.round(Bearplane.game.getGameWidth() / 2 + originX);
+			int y = Math.round(cam.position.y) - Math.round(Bearplane.game.getGameHeight() / 2 + originY);
 			// ensure our letterbox area is completely black (or filled with
 			// whatever letterbox design we choose
 			shapeRenderer.begin(ShapeType.Filled);
@@ -626,8 +626,8 @@ public abstract class Scene {
 		msgBoxMsgs.add(s);
 		lock();
 		if (msgBoxFrame == null) {
-			int gw = BearGame.game.getGameWidth();
-			int gh = BearGame.game.getGameHeight();
+			int gw = Bearplane.game.getGameWidth();
+			int gh = Bearplane.game.getGameHeight();
 			msgBoxFrame = new Frame(this, gw / 2, gh / 2, 750, 384, true, true, true);
 			msgBoxOK = new Button(this, 9999, gw / 2, gh / 2 + 128, 128, 48, "OK", false);
 			msgBoxFrame.buttons.add(msgBoxOK);

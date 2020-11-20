@@ -64,27 +64,38 @@ public class Log {
 	}
 
 	public static void init(String[] args) {
-		BearTool.assureDir("logs");
-		// keep kryo from running its fucking mouth
-		BearMinimumLog.DEBUG();
-		com.esotericsoftware.minlog.Log.NONE();
-		for (int i = 0; i < args.length; i++) {
-			switch (args[i]) {
-			case "-v":
-				BearMinimumLog.ERROR();
-				break;
-			case "-vv":
-				BearMinimumLog.WARN();
-				break;
-			case "-vvv":
-				BearMinimumLog.INFO();
-				break;
-			case "-vvvv":
-				BearMinimumLog.DEBUG();
-				break;
-			case "-c":
-				useFile = false;
-				break;
+		Util.assureDir("logs");		
+		BearMinimumLog.DEBUG(); //keep kryo from running its fucking mouth		
+		if( Bearplane.game.isRelease()) {
+			useFile = true;
+			for (int i = 0; i < args.length; i++) {
+				switch (args[i]) {
+				case "-v":
+					BearMinimumLog.ERROR();
+					break;
+				case "-vv":
+					BearMinimumLog.WARN();
+					break;
+				case "-vvv":
+					BearMinimumLog.INFO();
+					break;
+				case "-vvvv":
+					BearMinimumLog.DEBUG();
+					break;
+				default:
+					com.esotericsoftware.minlog.Log.NONE();
+					break;
+				}
+			}
+		} else {
+			useFile = false;
+			BearMinimumLog.DEBUG();
+			for (int i = 0; i < args.length; i++) {
+				switch (args[i]) {
+				case "-f":
+					useFile = true;
+					break;
+				}
 			}
 		}
 
@@ -103,7 +114,7 @@ public class Log {
 	}
 
 	static int getHour() {
-		String d = BearTool.getDate("MM-dd-yy-HH");
+		String d = Util.getDate("MM-dd-yy-HH");
 		return Integer.parseInt(d.substring(d.length() - 2));
 	}
 
@@ -119,8 +130,8 @@ public class Log {
 	public static void setLogFile() {
 		try {
 			hour = getHour();
-			String dir = BearTool.getDate("MM-dd-yy");
-			BearTool.assureDir("logs/" + dir);
+			String dir = Util.getDate("MM-dd-yy");
+			Util.assureDir("logs/" + dir);
 			String f = "logs/" + dir + "/" + dir + " Hour " + hour + ".txt";
 			setOut(f);
 		} catch (Exception e) {

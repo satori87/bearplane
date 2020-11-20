@@ -1,7 +1,7 @@
 package com.bg.bearplane.gui;
 
-import com.bg.bearplane.engine.BearGame;
-import com.bg.bearplane.engine.BearTool;
+import com.bg.bearplane.engine.Bearplane;
+import com.bg.bearplane.engine.Util;
 import com.bg.bearplane.engine.Log;
 
 public class CheckBox extends Component {
@@ -25,7 +25,7 @@ public class CheckBox extends Component {
 				return;
 			}
 			if (Scene.input.mouseDown[0]) {
-				if (BearTool.inCenteredBox(mX, mY, x, y, 13, 13)) {
+				if (Util.inCenteredBox(mX, mY, x, y, 13, 13)) {
 					if (Scene.input.wasMouseJustClicked[0]) {
 						Scene.input.wasMouseJustClicked[0] = false;
 						toggled = !toggled;
@@ -42,7 +42,7 @@ public class CheckBox extends Component {
 	public void render() {
 		try {
 			// render thyself, peasant
-			scene.drawRegion(BearGame.assets.checkBox[toggled ? 1 : 0], x - 6, y - 6, false, 0, 1);
+			scene.drawRegion(Bearplane.assets.checkBox[toggled ? 1 : 0], x - 6, y - 6, false, 0, 1);
 			if (text.length() > 0) {
 				scene.drawFont(0, x + 14, y-6, text, false, 1f);
 				// scene.drawFont(type, X, Y, s, toggled, scale);
