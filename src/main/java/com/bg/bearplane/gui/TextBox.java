@@ -97,7 +97,7 @@ public class TextBox extends Component {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -284,7 +284,7 @@ public class TextBox extends Component {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -313,7 +313,7 @@ public class TextBox extends Component {
 			Scene.input.keyPress.clear();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -346,7 +346,7 @@ public class TextBox extends Component {
 
 		Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 

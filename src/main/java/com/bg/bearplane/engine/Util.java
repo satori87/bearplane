@@ -3,8 +3,11 @@ package com.bg.bearplane.engine;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.zip.InflaterInputStream;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Util {
 
@@ -34,6 +38,52 @@ public class Util {
 	public static double distance(int x1, int y1, int x2, int y2) {
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
+	
+	public static void exportJSON(String filename, Object o) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			writeFile(filename, mapper.writeValueAsString(o));
+		} catch (Exception e) {
+			Log.error(e);
+		}
+	}
+	
+	public static boolean exists(String filename) {
+		File file = new File(filename);
+		return file.exists();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Object importJSON(String filename, Class c) {
+		String json = readFile(filename);
+		if(json.length() > 0) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				return mapper.readValue(json, c);
+			} catch (Exception e) {
+				Log.error(e);
+			}
+		}
+		return null;
+	}
+	
+	public static void writeFile(String filename, String s) {
+		try {
+			Files.write(Paths.get(filename), s.getBytes());
+		} catch (IOException e) {
+			Log.error(e);
+		}
+	}
+	
+	public static String readFile(String filename) {
+		String s = "";
+		try {
+			s = new String(Files.readAllBytes(Paths.get(filename))); 
+		} catch (Exception e) {
+			Log.warn(filename + " not found for reading");
+		}
+		return s;
+	}
 
 	public static String encryptPassword(String password) {
 		try {
@@ -43,7 +93,7 @@ public class Util {
 			return new String(messageDigest.digest());
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 		return "";
 	}
@@ -90,8 +140,7 @@ public class Util {
 			object = kryo.readObject(input, c);
 			input.close();
 		} catch (Exception e) {
-			Log.error(e);
-			System.exit(0);
+			Log.error(e);			
 		}
 		return object;
 	}
@@ -107,8 +156,7 @@ public class Util {
 			output.close();
 			return baos.toByteArray();
 		} catch (Exception e) {
-			Log.error(e);
-			System.exit(0);
+			Log.error(e);			
 		}
 		return null;
 	}
@@ -122,8 +170,7 @@ public class Util {
 				start += chunksize;
 			}
 		} catch (Exception e) {
-			Log.error(e);
-			System.exit(0);
+			Log.error(e);			
 		}
 		return ret;
 	}

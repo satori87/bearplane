@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author Nathan Sweet <misc@n4te.com>
  */
-public class BearMinimumLog {
+public class MinLog {
 	/** No logging at all. */
 	static public final int LEVEL_NONE = 7;
 	/** Critical errors. The application may no longer work correctly. */
@@ -51,7 +51,7 @@ public class BearMinimumLog {
 	 */
 	static public void set(int level) {
 		// Comment out method contents when compiling fixed level JARs.
-		BearMinimumLog.level = level;
+		MinLog.level = level;
 		ERROR = level <= LEVEL_ERROR;
 		WARN = level <= LEVEL_WARN;
 		INFO = level <= LEVEL_INFO;
@@ -85,7 +85,7 @@ public class BearMinimumLog {
 
 	/** Sets the logger that will write the log messages. */
 	static public void setLogger(Logger logger) {
-		BearMinimumLog.logger = logger;
+		MinLog.logger = logger;
 	}
 
 	static private Logger logger = new Logger();
@@ -190,7 +190,7 @@ public class BearMinimumLog {
 			logger.log(LEVEL_TRACE, category, message, null);
 	}
 
-	private BearMinimumLog() {
+	private MinLog() {
 	}
 
 	/**

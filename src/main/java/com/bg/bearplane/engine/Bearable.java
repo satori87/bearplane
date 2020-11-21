@@ -45,5 +45,5 @@ public interface Bearable {
 	public Object getNetwork();
 	
 	public boolean isRelease();
-
+	
 }

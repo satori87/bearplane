@@ -58,7 +58,6 @@ public abstract class StandardAssets {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 
@@ -157,7 +156,6 @@ public abstract class StandardAssets {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 
@@ -170,7 +168,6 @@ public abstract class StandardAssets {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 		return texture;
 	}

@@ -4,11 +4,11 @@ import com.badlogic.gdx.Screen;
 import com.bg.bearplane.gui.Scene;
 import com.bg.bearplane.net.TCPClient;
 
-public class BearScreen implements Screen {
+public class GameScreen implements Screen {
 
 	public Bearable game;
 
-	public BearScreen(Bearable game) {
+	public GameScreen(Bearable game) {
 		super();
 		this.game = game;
 
@@ -30,7 +30,6 @@ public class BearScreen implements Screen {
 			Scene.renderScene();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 
@@ -40,7 +39,6 @@ public class BearScreen implements Screen {
 			Scene.setupScreen(game.getGameWidth(), game.getGameHeight());
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 

@@ -92,7 +92,7 @@ public abstract class Scene {
 			setupScreen(Bearplane.game.getGameWidth(), Bearplane.game.getGameHeight());
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -170,7 +170,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -199,7 +199,7 @@ public abstract class Scene {
 			letterBox();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -226,7 +226,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 		if (autoCenter) {
 			moveCameraTo(Bearplane.game.getGameWidth() / 2, Bearplane.game.getGameHeight() / 2);
@@ -262,7 +262,7 @@ public abstract class Scene {
 			startStamp = tick;			
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -353,7 +353,7 @@ public abstract class Scene {
 			ScissorStack.pushScissors(scissors);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -363,7 +363,7 @@ public abstract class Scene {
 			ScissorStack.popScissors();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -372,7 +372,7 @@ public abstract class Scene {
 			batcher.draw(t, x , y , w, h, srcX, srcY, srcW, srcH, false, true);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -383,7 +383,7 @@ public abstract class Scene {
 					true);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -392,7 +392,7 @@ public abstract class Scene {
 			drawAbs(t, x, y, w, h, srcX, srcY, w, h);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -401,7 +401,7 @@ public abstract class Scene {
 			draw(t, x, y, w, h, srcX, srcY, w, h);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -435,7 +435,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -463,7 +463,7 @@ public abstract class Scene {
 			batcher.draw(region, dX, dY, oX, oY, width, height, scale, scale, rotation);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -500,7 +500,7 @@ public abstract class Scene {
 			batcher.setColor(Color.WHITE);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -539,7 +539,7 @@ public abstract class Scene {
 			batcher.setColor(Color.WHITE);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -577,7 +577,7 @@ public abstract class Scene {
 			shapeRenderer.end();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -590,7 +590,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -603,7 +603,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -614,7 +614,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(c.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -641,7 +641,7 @@ public abstract class Scene {
 			JOptionPane.showMessageDialog(dialog, s, "Odyssey", JOptionPane.OK_OPTION);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -681,7 +681,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 	
@@ -701,7 +701,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 

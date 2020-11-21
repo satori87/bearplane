@@ -87,7 +87,6 @@ public class Button extends Component {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 
@@ -104,7 +103,7 @@ public class Button extends Component {
 			scene.buttonPressed(id);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -159,7 +158,7 @@ public class Button extends Component {
 			scene.drawFont(0, x, y + 1, text, true, fontSize, c);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 }

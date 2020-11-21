@@ -35,7 +35,7 @@ public class CheckBox extends Component {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -49,7 +49,7 @@ public class CheckBox extends Component {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 

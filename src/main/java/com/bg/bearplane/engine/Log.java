@@ -14,7 +14,7 @@ public class Log {
 		if (useFile) {
 			setOut("logs/hacker.txt");
 		}
-		BearMinimumLog.error(s);
+		MinLog.error(s);
 		if (useFile) {
 			System.setOut(cur);
 		}
@@ -22,65 +22,66 @@ public class Log {
 
 	public static void info(String s) {
 		update();
-		BearMinimumLog.info(s);
+		MinLog.info(s);
 	}
 
 	public static void debug(String s) {
 		update();
-		BearMinimumLog.debug(s);
+		MinLog.debug(s);
 	}
 
 	public static void debug(int i) {
 		update();
-		BearMinimumLog.debug(i + "");
+		MinLog.debug(i + "");
 	}
 	
 	public static void debug(Exception e) {
 		update();
-		BearMinimumLog.error("Exception: " + e);
+		MinLog.error("Exception: " + e);
 		for (StackTraceElement ste : e.getStackTrace()) {
-			BearMinimumLog.debug(ste.toString());
+			MinLog.debug(ste.toString());
 		}
 
 	}
 
 	public static void warn(String s) {
 		update();
-		BearMinimumLog.warn(s);
+		MinLog.warn(s);
 	}
 
 	public static void error(String s) {
 		update();
-		BearMinimumLog.error(s);
+		MinLog.error(s);
+		System.exit(0);
 	}
 
 	public static void error(Exception e) {
 		update();
-		BearMinimumLog.error("Exception: " + e);
+		MinLog.error("Exception: " + e);
 		for (StackTraceElement ste : e.getStackTrace()) {
-			BearMinimumLog.info(ste.toString());
+			MinLog.info(ste.toString());
 		}
-
+		System.exit(0);
 	}
 
 	public static void init(String[] args) {
 		Util.assureDir("logs");		
-		BearMinimumLog.DEBUG(); //keep kryo from running its fucking mouth		
+		MinLog.DEBUG(); //keep kryo from running its fucking mouth		
 		if( Bearplane.game.isRelease()) {
 			useFile = true;
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
 				case "-v":
-					BearMinimumLog.ERROR();
+					MinLog.ERROR();
 					break;
 				case "-vv":
-					BearMinimumLog.WARN();
+					MinLog.WARN();
 					break;
 				case "-vvv":
-					BearMinimumLog.INFO();
+					MinLog.INFO();
 					break;
 				case "-vvvv":
-					BearMinimumLog.DEBUG();
+					MinLog.DEBUG();
 					break;
 				default:
 					com.esotericsoftware.minlog.Log.NONE();
@@ -89,7 +90,7 @@ public class Log {
 			}
 		} else {
 			useFile = false;
-			BearMinimumLog.DEBUG();
+			MinLog.DEBUG();
 			for (int i = 0; i < args.length; i++) {
 				switch (args[i]) {
 				case "-f":

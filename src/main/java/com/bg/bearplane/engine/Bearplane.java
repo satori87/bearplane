@@ -12,7 +12,7 @@ import com.bg.bearplane.net.TCPClient;
 public class Bearplane extends com.badlogic.gdx.Game {
 
 	public static Bearable game;
-	public BearScreen gameScreen;
+	public GameScreen gameScreen;
 	public static StandardAssets assets;
 	public NetworkRegistrar network;
 
@@ -24,6 +24,19 @@ public class Bearplane extends com.badlogic.gdx.Game {
 		this.network = (NetworkRegistrar)game.getNetwork();
 	}
 
+	public static BaseConfig loadConfig(String filename, BaseConfig config) {
+		if (Util.exists(filename)) {
+			config = (BaseConfig)Util.importJSON(filename, config.getClass());
+		} else {
+			saveConfig(filename, config);
+		}
+		return config;
+	}
+	
+	public static void saveConfig(String filename, BaseConfig config) {
+		Util.exportJSON(filename, config);
+	}
+	
 	@Override
 	public void create() {
 		try {
@@ -39,12 +52,11 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			ls.game = game;
 			Scene.addScene("load", ls);
 			Scene.change("load");
-			gameScreen = new BearScreen(game);
+			gameScreen = new GameScreen(game);
 			setScreen(gameScreen);
 			preloadAssets();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 
 	}
@@ -71,7 +83,6 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			assets.manager.update();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 	}
 
@@ -84,7 +95,6 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			return assets.manager.isFinished();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 		return false;
 	}
@@ -94,7 +104,6 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			return assets.manager.getProgress();
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 		return 0;
 	}
@@ -134,7 +143,6 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
 		}
 		return cfg;
 	}

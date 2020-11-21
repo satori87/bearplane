@@ -45,7 +45,7 @@ public class TCPClient {
 			});
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
@@ -63,7 +63,7 @@ public class TCPClient {
 			sendTCP(na);
 		} catch (Exception e) {
 			Log.error(e);
-			System.exit(0);
+			
 		}
 	}
 
