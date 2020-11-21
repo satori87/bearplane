@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntMap;
 
-public abstract class StandardAssets {
+public abstract class BaseAssets {
 
 	public TextureRegion[] framePiece;
 	Texture frameTex;
@@ -32,8 +32,8 @@ public abstract class StandardAssets {
 	Texture texture;
 	public static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	public HashMap<String, String> textureList = new HashMap<String, String>();
-	public static IntMap<ParticleEffect> effectData = new IntMap<ParticleEffect>();
-	public static IntMap<ParticleEffectPool> effectPool = new IntMap<ParticleEffectPool>();
+	public IntMap<ParticleEffect> effectData = new IntMap<ParticleEffect>();
+	public IntMap<ParticleEffectPool> effectPool = new IntMap<ParticleEffectPool>();
 	static String[] effectnames;
 	
 	public void preloadNecessities() {

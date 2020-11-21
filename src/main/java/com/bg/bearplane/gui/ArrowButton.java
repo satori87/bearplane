@@ -4,7 +4,7 @@ public class ArrowButton extends Button {
 
 	int dir = 0;
 
-	public ArrowButton(Scene scene, int id, int x, int y, int dir) {
+	public ArrowButton(Scene scene, String id, int x, int y, int dir) {
 		super();
 		this.scene = scene;
 		this.id = id;

@@ -8,13 +8,16 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.bg.bearplane.gui.Scene;
 import com.bg.bearplane.net.NetworkRegistrar;
 import com.bg.bearplane.net.TCPClient;
+import com.esotericsoftware.kryo.util.IntMap;
 
 public class Bearplane extends com.badlogic.gdx.Game {
 
 	public static Bearable game;
 	public GameScreen gameScreen;
-	public static StandardAssets assets;
+	public static BaseAssets assets;
 	public NetworkRegistrar network;
+	
+	public static IntMap<Timer> timers = new IntMap<Timer>();
 
 	public Bearplane(Bearable theGame, String[] args) {		
 		super();		
@@ -35,6 +38,10 @@ public class Bearplane extends com.badlogic.gdx.Game {
 	
 	public static void saveConfig(String filename, BaseConfig config) {
 		Util.exportJSON(filename, config);
+	}
+	
+	public static void addTimer(int interval) {
+		timers.put(interval, new Timer(game, interval));
 	}
 	
 	@Override
@@ -58,7 +65,6 @@ public class Bearplane extends com.badlogic.gdx.Game {
 		} catch (Exception e) {
 			Log.error(e);
 		}
-
 	}
 
 	@Override

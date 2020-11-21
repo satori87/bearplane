@@ -8,11 +8,11 @@ public class CheckBox extends Component {
 
 	public boolean toggled = false;
 
-	public CheckBox(Scene scene, int id, int x, int y) {
+	public CheckBox(Scene scene, String id, int x, int y) {
 		super(scene, id, x, y);
 	}
 
-	public CheckBox(Scene scene, int id, int x, int y, String text) {
+	public CheckBox(Scene scene, String id, int x, int y, String text) {
 		super(scene, id, x, y);
 		this.text = text;
 	}

@@ -17,9 +17,7 @@ public interface Bearable {
 	public String getGameName();
 	
 	public void loaded();
-	
-	public void doTimers(long tick);
-	
+
 	public void addTimers();
 	
 	public void doTimer(int interval);
@@ -40,10 +38,22 @@ public interface Bearable {
 	
 	public boolean isvSync();
 	
-	public StandardAssets getAssets();
+	public BaseAssets getAssets();
 	
 	public Object getNetwork();
 	
 	public boolean isRelease();
+	
+	public BaseRealm getRealm();
+	
+	public void resume();
+	
+	public void hide();
+	
+	public void show();
+	
+	public void pause();
+	
+	public void setTick(long tick);	
 	
 }

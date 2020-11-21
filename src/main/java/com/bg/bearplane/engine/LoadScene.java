@@ -13,18 +13,17 @@ public class LoadScene extends Scene {
 		super.start();
 	}
 
-	public void update() {
+	public void updateBase() {
 		Bearplane.updateAssetManager();
 		if (Bearplane.isAssetLoadingDone()) {
 			Bearplane.loadAssets();
 			Bearplane.loaded();
 		} else {
-			super.update();
+			super.updateBase();
 		}
 	}
 
 	public void render() {
-		super.render();
 		if (tick > update) {
 			update = tick + 100;
 			progress = Bearplane.getAssetLoadProgress();
@@ -34,13 +33,19 @@ public class LoadScene extends Scene {
 	}
 
 	@Override
-	public void buttonPressed(int id) {
+	public void buttonPressed(String id) {
 
 	}
 
 	@Override
-	public void enterPressedInField(int id) {
+	public void enterPressedInField(String id) {
 
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

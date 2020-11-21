@@ -25,7 +25,7 @@ public class Button extends Component {
 
 	}
 
-	public Button(Scene scene, int id, int x, int y, int width, int height, String text, boolean toggle) {
+	public Button(Scene scene, String id, int x, int y, int width, int height, String text, boolean toggle) {
 		super(scene, id, x, y);
 		this.width = width;
 		this.height = height;
@@ -34,7 +34,7 @@ public class Button extends Component {
 		fontSize = height / 24f;
 	}
 
-	public Button(Scene scene, int id, int x, int y, int width, int height, String text) {
+	public Button(Scene scene, String id, int x, int y, int width, int height, String text) {
 		this(scene, id, x, y, width, height, text, false);
 	}
 

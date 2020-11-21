@@ -1,9 +1,7 @@
 package com.bg.bearplane.gui;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
+import java.util.HashMap;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.bg.bearplane.engine.Bearplane;
 
@@ -14,17 +12,15 @@ public class Frame extends Component {
 
 	public boolean relative = false;
 
-	public List<Frame> frames = new LinkedList<Frame>();
-	public List<Button> buttons = new LinkedList<Button>();
-	public List<Label> labels = new LinkedList<Label>();
-	public List<TextBox> textBoxes = new LinkedList<TextBox>();
-	public List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
-	public List<ListBox> listBoxes= new ArrayList<ListBox>();
+	public HashMap<String, Frame> frames = new HashMap<String, Frame>();
+	public HashMap<String, Button> buttons = new HashMap<String, Button>();
+	public HashMap<String, Label> labels = new HashMap<String, Label>();
+	public HashMap<String, Field> fields = new HashMap<String, Field>();
+	public HashMap<String, CheckBox> checkBoxes = new HashMap<String, CheckBox>();
+	public HashMap<String, ListBox> listBoxes= new HashMap<String, ListBox>();
 
 	Frame parent = null;
 
-
-	public List<TextBox> fields;
 	
 	public Frame(Scene scene) {
 		x = 0;
@@ -36,9 +32,9 @@ public class Frame extends Component {
 		useFrame = false;
 	}
 	
-	public Frame(Scene scene, int x, int y, int width, int height, boolean useBackground, boolean centered,
+	public Frame(Scene scene, String id, int x, int y, int width, int height, boolean useBackground, boolean centered,
 			boolean useFrame) {
-		super(scene, 0, x, y);
+		super(scene, id, x, y);
 		this.width = width;
 		this.height = height;
 		this.useBackground = useBackground;
@@ -46,49 +42,87 @@ public class Frame extends Component {
 		this.useFrame = useFrame;
 	}
 
-	public Frame(Scene scene, int x, int y, int width, int height, boolean useBackground, boolean centered) {
-		this(scene, x, y, width, height, useBackground, centered, true);
+	public Frame(Scene scene, String id, int x, int y, int width, int height, boolean useBackground, boolean centered) {
+		this(scene, id, x, y, width, height, useBackground, centered, true);
 	}
 
-	int focus = 0;
+	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text) {
+		return addButton(scene, id, x, y, width, height, text);
+	}
 
-	void nextFocus() {
-		if (textBoxes.size() > 0) {
+	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text, boolean toggle) {
+		return buttons.put(id, new Button(scene, id, x, y, width, height, text, toggle));
+	}
+	
+	public static Button getButton(HashMap<String, Button> buttons, String id) {
+		return buttons.get(id);
+	}
+	
+	public Button getButton(String id) {
+		return buttons.get(id);
+	}
+	
+	public Frame addFrame(Scene scene, String id, int x, int y, int w, int h, boolean bg, boolean center) {
+		return frames.put(id, new Frame(scene, id, x, y, w, h, bg, center));
+	}
+	
+	public Frame getFrame(String id) {
+		return frames.get(id);
+	}
+	
+	public Frame getFrame(HashMap<String, Frame> frames, String id) {
+		return frames.get(id);
+	}
+	
+	public Label addLabel(Scene scene, String id, int x, int y, float s, String t, Color c, boolean center) {
+		return labels.put(id, new Label(scene,id,x,y,s,t,c,center));
+	}
+	
+	public static Label getLabel(HashMap<String, Label> labels, String id) {
+		return labels.get(id);
+	}
+	
+	public Label getLabel(String id) {
+		return labels.get(id);
+	}
+	
+	void nexhtFocus() {
+		if (fields.size() > 0) {
 			boolean f = false;
-			for (TextBox t : textBoxes) {
+			for (Field t : fields.values()) {
 				if (t.focus) {
 					f = true;
 				}
 			}
 			if (f) {
-				if (textBoxes.get(focus) != null) {
-					textBoxes.get(focus).focus = false;
+				if (fields.keySet().toArray()[focus] != null) {
+					fields.get(focus).focus = false;
 				}
 				focus++;
-				if (focus >= textBoxes.size()) {
+				if (focus >= fields.size()) {
 					focus = 0;
 				}
-				if (textBoxes.get(focus) != null) {
-					textBoxes.get(focus).focus = true;
+				if (fields.get(focus) != null) {
+					fields.get(focus).focus = true;
 				}
 			}
 		}
 	}
 
 	public void update() {
-		for (Frame d : frames) {
+		for (Frame d : frames.values()) {
 			d.updateComponent(tick);
 		}
-		for (Button b : buttons) {
+		for (Button b : buttons.values()) {
 			b.updateComponent(tick);
 		}
-		for (TextBox t : textBoxes) {
+		for (Field t : fields.values()) {
 			t.updateComponent(tick);
 		}
-		for (CheckBox c : checkBoxes) {
+		for (CheckBox c : checkBoxes.values()) {
 			c.updateComponent(tick);
 		}
-		for (ListBox c : listBoxes) {
+		for (ListBox c : listBoxes.values()) {
 			c.updateComponent(tick);
 		}
 	}
@@ -143,22 +177,22 @@ public class Frame extends Component {
 			this.x -= parent.x;
 			this.y -= parent.y;
 		}
-		for (Frame d : frames) {
+		for (Frame d : frames.values()) {
 			d.renderComponent();
 		}
-		for (Button b : buttons) {
+		for (Button b : buttons.values()) {
 			b.renderComponent();
 		}
-		for (Label l : labels) {
+		for (Label l : labels.values()) {
 			l.renderComponent();
 		}
-		for (TextBox t : textBoxes) {
+		for (Field t : fields.values()) {
 			t.renderComponent();
 		}
-		for (CheckBox c : checkBoxes) {
+		for (CheckBox c : checkBoxes.values()) {
 			c.renderComponent();
 		}
-		for(ListBox c : listBoxes) {
+		for(ListBox c : listBoxes.values()) {
 			c.renderComponent();
 		}
 	}

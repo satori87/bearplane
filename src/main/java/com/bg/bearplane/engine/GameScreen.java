@@ -7,11 +7,12 @@ import com.bg.bearplane.net.TCPClient;
 public class GameScreen implements Screen {
 
 	public Bearable game;
+	
+	long tick;
 
 	public GameScreen(Bearable game) {
 		super();
 		this.game = game;
-
 	}
 
 	@Override
@@ -20,12 +21,19 @@ public class GameScreen implements Screen {
 			// libGDX calls render only so we must distinguish
 			// between update and render ourselves
 			// ignore delta, we use our own timing system in Scene
-			game.doTimers(System.currentTimeMillis());
+			tick = System.currentTimeMillis();
+			game.setTick(tick);
+			for (Timer t : Bearplane.timers.values()) {
+				t.update(tick);
+			}
 			Scene.updateScene();
+			game.getRealm().tick = tick;
+			game.getRealm().updateBase();
+			game.getRealm().update();
 			if (game instanceof TCPClient) {
 				TCPClient c = (TCPClient) game;
 				c.processPacketQueue();
-			}
+			}			
 			game.update();
 			Scene.renderScene();
 		} catch (Exception e) {
@@ -44,22 +52,22 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-
+		game.show();
 	}
 
 	@Override
 	public void hide() {
-
+		game.hide();
 	}
 
 	@Override
 	public void pause() {
-
+		game.pause();
 	}
 
 	@Override
 	public void resume() {
-
+		game.resume();
 	}
 
 	@Override

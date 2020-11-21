@@ -19,9 +19,9 @@ public class ListBox extends Component {
 
 	Frame frame;
 
-	public ListBox(Scene scene, int id, int x, int y, int width, int height) {
+	public ListBox(Scene scene, String id, int x, int y, int width, int height) {
 		super(scene, id, x, y);
-		frame = new Frame(scene, x, y, width, height, false, false, true);
+		frame = new Frame(scene, id, x, y, width, height, false, false, true);
 		this.width = width;
 		height = ((height - 10) / 20) * 20 + 10;
 		this.height = height;

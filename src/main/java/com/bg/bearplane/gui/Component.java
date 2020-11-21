@@ -5,7 +5,7 @@ public abstract class Component {
 
 	Scene scene;
 
-	public int id = 0;
+	public String id;
 	public int x = 0;
 	public int y = 0;
 	public int width = 32;
@@ -25,7 +25,7 @@ public abstract class Component {
 
 	}
 
-	public Component(Scene scene, int id, int x, int y) {
+	public Component(Scene scene, String id, int x, int y) {
 		this.scene = scene;
 		this.x = x;
 		this.y = y;

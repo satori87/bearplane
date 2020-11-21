@@ -54,30 +54,30 @@ public abstract class Scene {
 	public boolean autoCenter = false;
 
 	// iface stuff
-	public List<Frame> frames = new LinkedList<Frame>();
-	public List<Button> buttons = new LinkedList<Button>();
-	public List<Label> labels = new LinkedList<Label>();
-	public List<TextBox> textBoxes = new LinkedList<TextBox>();
-	public List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+	public HashMap<String, Frame> frames = new HashMap<String, Frame>();
+	public HashMap<String, Button> buttons = new HashMap<String, Button>();
+	public HashMap<String, Label> labels = new HashMap<String, Label>();
+	public HashMap<String, Field> fields = new HashMap<String, Field>();
+	public HashMap<String, CheckBox> checkBoxes = new HashMap<String, CheckBox>();
 	public HashMap<String, Window> windows = new HashMap<String, Window>();
-	public ArrayList<ListBox> listBoxes = new ArrayList<ListBox>();
+	public HashMap<String, ListBox> listBoxes = new HashMap<String, ListBox>();
 
 	public long startStamp = 0;
 	public boolean started = false;
 
-	public abstract void buttonPressed(int id);
+	public abstract void buttonPressed(String id);
 
-	public abstract void enterPressedInField(int id);
+	public abstract void enterPressedInField(String id);
 
-	int focus = 0;
+	//int focus;
 
 	public static boolean locked = false;
 
-	public void enterPressedInList(int id) {
+	public void enterPressedInList(String id) {
 
 	}
 
-	public void listChanged(int id, int sel) {
+	public void listChanged(String id, int sel) {
 
 	}
 
@@ -92,23 +92,89 @@ public abstract class Scene {
 			setupScreen(Bearplane.game.getGameWidth(), Bearplane.game.getGameHeight());
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
-	public static Button getButton(List<Button> buttons, int id) {
-		for (Button b : buttons) {
-			if (b.id == id) {
-				return b;
-			}
+	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text) {
+		return addButton(scene, id, x, y, width, height, text, false);
+	}
+
+	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text, boolean toggle) {
+		return buttons.put(id, new Button(scene, id, x, y, width, height, text, toggle));
+	}
+	
+	public static Button getButton(HashMap<String, Button> buttons, String id) {
+		return buttons.get(id);
+	}
+	
+	public Button getButton(String id) {
+		return buttons.get(id);
+	}
+	
+	public Frame addFrame(Scene scene, String id, int x, int y, int w, int h, boolean bg, boolean center) {
+		return frames.put(id, new Frame(scene, id, x, y, w, h, bg, center));
+	}
+	
+	public Frame getFrame(String id) {
+		return frames.get(id);
+	}
+	
+	public Frame getFrame(HashMap<String, Frame> frames, String id) {
+		return frames.get(id);
+	}
+	
+	public Label addLabel(Scene scene, String id, int x, int y, float s, String t, Color c, boolean center) {
+		return labels.put(id, new Label(scene,id,x,y,s,t,c,center));
+	}
+	
+	public static Label getLabel(HashMap<String, Label> labels, String id) {
+		return labels.get(id);
+	}
+	
+	public Label getLabel(String id) {
+		return labels.get(id);
+	}
+	
+	public Field addField(Scene scene, String id, int max, boolean focus, int x, int y, int width, boolean centered, Frame frame) {
+		return fields.put(id, new Field(scene, id, max, focus, x, y, width, centered,frame));
+	}
+	
+	public Field addField(Scene scene, String id, int max, boolean focus, int x, int y, int width, boolean centered) {
+		return addField(scene, id, max, focus, x,y,width,centered,null);
+	}
+	
+	public Field addField(Frame f,String id,  String name, int maxLength, boolean allowLetters) {
+		int w = 100;
+		f.addLabel(this, id, modX + 10 + c * cW, modY + 110 + r * 60, 1f, name + ":", Color.WHITE, false);
+		Field t = addField(this, id, maxLength, false, modX + 120 + c * cW, modY + 70 + r * 60, w, false);
+		t.allowLetters = allowLetters;
+		r++;
+		return t;
+	}
+
+	public List<Button> addRadio(Frame f, String[] names, String[] ids, int w, int h) {
+		int count = 0;
+		List<Button> bl = new ArrayList<Button>();
+		Button b;
+		for (String i : ids) {
+			b = f.addButton(this, i, modX + 40 + c * cW + count * (w + 4), modY + 116 + r * 60, w, h, names[count]);
+			b.toggle = true;
+			count++;
+			bl.add(b);
 		}
-		return null;
+		r++;
+		return bl;
+	}
+
+	public Field addField(Frame f, String id, String name, int maxLength) {
+		return addField(f, id, name, maxLength, false);
 	}
 
 	public static void updateScene() {
 		if (scene != null) {
 			if (!locked) {
-				scene.update();
+				scene.updateBase();
 			} else if (msgBoxFrame != null) {
 				// we have a msg box
 				msgBoxFrame.updateComponent(tick);
@@ -131,7 +197,7 @@ public abstract class Scene {
 	}
 
 	public void deselectAllButtons() {
-		for (Button b : buttons) {
+		for (Button b : buttons.values()) {
 			if (!b.toggle) {
 				b.sel = false;
 				b.click = false;
@@ -140,22 +206,22 @@ public abstract class Scene {
 		}
 	}
 
-	public void update() {
+	public void updateBase() {
 		try {
 			tick = System.currentTimeMillis();
 			shifting = input.keyDown[59] || input.keyDown[60];
 			alting = input.keyDown[57] || input.keyDown[58];
 			ctrling = input.keyDown[129] || input.keyDown[130];
 
-			for (Frame d : frames)
+			for (Frame d : frames.values())
 				d.updateComponent(tick);
-			for (Button b : buttons)
+			for (Button b : buttons.values())
 				b.updateComponent(tick);
-			for (TextBox t : textBoxes)
+			for (Field t : fields.values())
 				t.updateComponent(tick);
-			for (CheckBox c : checkBoxes)
+			for (CheckBox c : checkBoxes.values())
 				c.updateComponent(tick);
-			for (ListBox l : listBoxes) {
+			for (ListBox l : listBoxes.values()) {
 				l.updateComponent(tick);
 			}
 			for (int i = 0; i < 10; i++) {
@@ -170,7 +236,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -183,7 +249,7 @@ public abstract class Scene {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batcher.enableBlending();
 			batcher.begin();
-			scene.render();
+			scene.renderBase();
 			if (msgBoxFrame != null) {
 				msgBoxFrame.renderComponent();
 				String ss = msgBoxMsgs.get(0);
@@ -199,34 +265,38 @@ public abstract class Scene {
 			letterBox();
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
+	
+	public abstract void render();
+	
+	public abstract void update();
 
-	public void render() {
+	public void renderBase() {
 		try {
 			// overload only in some scenes
-			for (Frame d : frames) {
+			for (Frame d : frames.values()) {
 				d.renderComponent();
 			}
-			for (Button b : buttons) {
+			for (Button b : buttons.values()) {
 				b.renderComponent();
 			}
-			for (Label l : labels) {
+			for (Label l : labels.values()) {
 				l.renderComponent();
 			}
-			for (TextBox t : textBoxes) {
+			for (Field t : fields.values()) {
 				t.renderComponent();
 			}
-			for (CheckBox c : checkBoxes) {
+			for (CheckBox c : checkBoxes.values()) {
 				c.renderComponent();
 			}
-			for (ListBox l : listBoxes) {
+			for (ListBox l : listBoxes.values()) {
 				l.renderComponent();
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 		if (autoCenter) {
 			moveCameraTo(Bearplane.game.getGameWidth() / 2, Bearplane.game.getGameHeight() / 2);
@@ -241,7 +311,7 @@ public abstract class Scene {
 		// non dialog, non button, non text touches. overload this in specific scene
 	}
 
-	public void checkBox(int id) {
+	public void checkBox(String id) {
 		// overload this to get notified of checkbox activity
 	}
 
@@ -250,7 +320,7 @@ public abstract class Scene {
 		frames.clear();
 		buttons.clear();
 		labels.clear();
-		textBoxes.clear();
+		fields.clear();
 		checkBoxes.clear();
 		startStamp = tick;
 	}
@@ -259,22 +329,18 @@ public abstract class Scene {
 		try {
 			started = true;
 			clear();
-			startStamp = tick;			
+			startStamp = tick;
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
-	public void addButtons(int x, int y, int width, int height, int padding, String[] text, int[] ids, boolean up,
+	public void addButtons(int x, int y, int width, int height, int padding, String[] text, String[] ids, boolean up,
 			boolean toggle) {
 		int n = text.length;
 		int bX = x;
 		int bY = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
-		// if (!up) {
-		// bY = x;
-		// bX = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
-		// }
 		if (n % 2 != 0) {
 			if (up) {
 				bY += (padding + height) / 2;
@@ -283,7 +349,7 @@ public abstract class Scene {
 			}
 		}
 		for (int c = 0; c < n; c++) {
-			buttons.add(new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
+			buttons.put(ids[c], new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
 			if (up) {
 				bY += (height + padding);
 			} else {
@@ -291,10 +357,9 @@ public abstract class Scene {
 			}
 		}
 	}
-	
 
-	public void addButtons(List<Button> buttons, int x, int y, int width, int height, int padding, String[] text, int[] ids, boolean up,
-			boolean toggle) {
+	public void addButtons(HashMap<String, Button> buttons, int x, int y, int width, int height, int padding,
+			String[] text, String[] ids, boolean up, boolean toggle) {
 		int n = text.length;
 		int bX = x;
 		int bY = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
@@ -304,15 +369,15 @@ public abstract class Scene {
 		// }
 		if (n % 2 != 0) {
 			if (up) {
-				//bY += (padding + height) / 2;
+				// bY += (padding + height) / 2;
 			} else {
 				bX += (width + padding);
 			}
 		}
 		for (int c = 0; c < n; c++) {
-			buttons.add(new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
+			buttons.put(ids[c], new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
 			if (up) {
-				//bY += (height + padding);
+				// bY += (height + padding);
 			} else {
 				bX += (width + padding);
 			}
@@ -320,23 +385,23 @@ public abstract class Scene {
 	}
 
 	void nextFocus() {
-		if (textBoxes.size() > 0) {
+		if (fields.size() > 0) {
 			boolean f = false;
-			for (TextBox t : textBoxes) {
+			for (Field t : fields.values()) {
 				if (t.focus) {
 					f = true;
 				}
 			}
 			if (f) {
-				if (textBoxes.get(focus) != null) {
-					textBoxes.get(focus).focus = false;
+				if (fields.get(focus) != null) {
+					fields.get(focus).focus = false;
 				}
 				focus++;
-				if (focus >= textBoxes.size()) {
+				if (focus >= fields.size()) {
 					focus = 0;
 				}
-				if (textBoxes.get(focus) != null) {
-					textBoxes.get(focus).focus = true;
+				if (fields.get(focus) != null) {
+					fields.get(focus).focus = true;
 				}
 			} else {
 				Log.warn("Scene.nextFocus() did a funny thing?");
@@ -353,7 +418,7 @@ public abstract class Scene {
 			ScissorStack.pushScissors(scissors);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -363,16 +428,16 @@ public abstract class Scene {
 			ScissorStack.popScissors();
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
 	public void draw(Texture t, int x, int y, int w, int h, int srcX, int srcY, int srcW, int srcH) {
 		try {
-			batcher.draw(t, x , y , w, h, srcX, srcY, srcW, srcH, false, true);
+			batcher.draw(t, x, y, w, h, srcX, srcY, srcW, srcH, false, true);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -383,7 +448,7 @@ public abstract class Scene {
 					true);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -392,7 +457,7 @@ public abstract class Scene {
 			drawAbs(t, x, y, w, h, srcX, srcY, w, h);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -401,7 +466,7 @@ public abstract class Scene {
 			draw(t, x, y, w, h, srcX, srcY, w, h);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -426,8 +491,8 @@ public abstract class Scene {
 				eY -= (height / 2);
 			}
 			// we gotta round the floats
-			int dX = Math.round(eX );
-			int dY = Math.round(eY );
+			int dX = Math.round(eX);
+			int dY = Math.round(eY);
 			if (centered) {
 				batcher.draw(region, dX, dY, width / 2, height / 2, width, height, scale, scale, rotation);
 			} else {
@@ -435,7 +500,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -463,7 +528,7 @@ public abstract class Scene {
 			batcher.draw(region, dX, dY, oX, oY, width, height, scale, scale, rotation);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -500,7 +565,7 @@ public abstract class Scene {
 			batcher.setColor(Color.WHITE);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -539,7 +604,7 @@ public abstract class Scene {
 			batcher.setColor(Color.WHITE);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -577,7 +642,7 @@ public abstract class Scene {
 			shapeRenderer.end();
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -590,7 +655,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -603,7 +668,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -614,7 +679,7 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(c.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -628,9 +693,9 @@ public abstract class Scene {
 		if (msgBoxFrame == null) {
 			int gw = Bearplane.game.getGameWidth();
 			int gh = Bearplane.game.getGameHeight();
-			msgBoxFrame = new Frame(this, gw / 2, gh / 2, 750, 384, true, true, true);
-			msgBoxOK = new Button(this, 9999, gw / 2, gh / 2 + 128, 128, 48, "OK", false);
-			msgBoxFrame.buttons.add(msgBoxOK);
+			msgBoxFrame = new Frame(this, "frame", gw / 2, gh / 2, 750, 384, true, true, true);
+			msgBoxOK = new Button(this, "ok", gw / 2, gh / 2 + 128, 128, 48, "OK", false);
+			msgBoxFrame.buttons.put("ok", msgBoxOK);
 		}
 	}
 
@@ -641,7 +706,7 @@ public abstract class Scene {
 			JOptionPane.showMessageDialog(dialog, s, "Odyssey", JOptionPane.OK_OPTION);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -681,10 +746,10 @@ public abstract class Scene {
 			shapeRenderer.setProjectionMatrix(cam.combined);
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
-	
+
 	public static Scene lastScene = null;
 
 	public static void change(String to) {
@@ -701,7 +766,7 @@ public abstract class Scene {
 			}
 		} catch (Exception e) {
 			Log.error(e);
-			
+
 		}
 	}
 
@@ -725,40 +790,11 @@ public abstract class Scene {
 	public static void unlock() {
 		locked = false;
 	}
-	
+
 	public int r = 0;
 	public int c = 0;
 	public int cW = 250;
 	public int modX = 0;
 	public int modY = 0;
-	
-	public TextBox addField(Frame f, String name, int maxLength, boolean allowLetters) {
-		int w = 100;
-		f.labels.add(new Label(this, modX + 10 + c * cW, modY + 110 + r * 60, 1f, name + ":", Color.WHITE, false));
-		TextBox t = new TextBox(this, 0, maxLength, false, modX + 120 + c * cW, modY + 70 + r * 60, w, false);
-		f.fields.add(t);
-		t.allowLetters = allowLetters;
-		f.textBoxes.add(t);
-		r++;
-		return t;
-	}
 
-	public List<Button> addRadio(Frame f, String[] names, int[] ids, int w, int h) {
-		int count = 0;
-		List<Button> bl = new ArrayList<Button>();
-		Button b;
-		for (int i : ids) {
-			b = new Button(this, i, modX + 40 + c * cW + count * (w + 4), modY + 116 + r * 60, w, h, names[count]);
-			b.toggle = true;
-			f.buttons.add(b);
-			count++;
-			bl.add(b);
-		}
-		r++;
-		return bl;
-	}
-
-	public TextBox addField(Frame f, String name, int maxLength) {
-		return addField(f, name, maxLength, false);
-	}
 }

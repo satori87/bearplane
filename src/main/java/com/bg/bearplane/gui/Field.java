@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.bg.bearplane.engine.Bearplane;
 import com.bg.bearplane.engine.Log;
 
-public class TextBox extends Component {
+public class Field extends Component {
 
-	public boolean focus = false;
+	//public boolean focus = false;
 	public boolean blink = false;
 	public long blinkStamp = 0;
 
@@ -26,11 +26,10 @@ public class TextBox extends Component {
 
 	public boolean neg = false;
 
-	public TextBox(Scene scene, int id, int max, boolean focus, int x, int y, int width, boolean centered,
+	public Field(Scene scene, String id, int max, int x, int y, int width, boolean centered,
 			Frame frame) {
 		super(scene, id, x, y + 16);
 		this.max = max;
-		this.focus = focus;
 		this.frame = frame;
 		if (centered) {
 			this.x -= width / 2;
@@ -38,8 +37,8 @@ public class TextBox extends Component {
 		this.width = width;
 	}
 
-	public TextBox(Scene scene, int id, int max, boolean focus, int x, int y, int width, boolean centered) {
-		this(scene, id, max, focus, x, y, width, centered, null);
+	public Field(Scene scene, String id, int max, int x, int y, int width, boolean centered) {
+		this(scene, id, max, x, y, width, centered, null);
 	}
 
 	static public boolean inCentered(int x, int y, int centerX, int centerY, int width, int height) {
@@ -64,27 +63,14 @@ public class TextBox extends Component {
 			if (Scene.input.wasMouseJustClicked[0]) {
 				if (inBox(mX, mY, x, x + width, y - 7, y + 10 + 36)) {
 					Scene.input.wasMouseJustClicked[0] = false;
-					for (TextBox t : scene.textBoxes) {
-						t.focus = false;
-					}
-					for (Frame f : scene.frames) {
-						for (TextBox t : f.textBoxes) {
-							t.focus = false;
-						}
-						for (Frame ff : f.frames) {
-							for (TextBox t : ff.textBoxes) {
-								t.focus = false;
-							}
-						}
-					}
-					focus = true;
+					scene.setFocus(id);					
 				}
 			}
 			if (tick > blinkStamp) {
 				blink = !blink;
 				blinkStamp = tick + 400;
 			}
-			if (focus) {
+			if (hasFocus()) {
 				processKeys(max);
 			} else {
 			}
@@ -316,6 +302,10 @@ public class TextBox extends Component {
 			
 		}
 	}
+	
+	public boolean hasFocus() {
+		return Scene.getFocus().equals(id);
+	}
 
 	public void render() {
 		try {
@@ -339,7 +329,7 @@ public class TextBox extends Component {
 				scene.drawFont(0, sx + x + width / 2, y + 28 - 2, text, true, 1.6f, Color.WHITE);
 				len = Bearplane.assets.getStringWidth(text, 1.6f, 1, 0);
 			}
-			if (focus && blink) {
+			if (hasFocus() && blink) {
 				scene.drawFont(0, sx + (int) (x + width / 2 + len / 2), y + 28 - 2, "|", true, 1.6f, Color.WHITE);
 			}
 		} catch (

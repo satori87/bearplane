@@ -17,8 +17,8 @@ public class Label extends Component {
 	public float scale = 1.0f;
 	public Color color = Color.WHITE;
 
-	public Label(Scene scene, int x, int y, float scale, String text, Color color, boolean centered) {
-		super(scene,0,x,y);
+	public Label(Scene scene, String id, int x, int y, float scale, String text, Color color, boolean centered) {
+		super(scene,id,x,y);
 		this.scale = scale;
 		this.color = color;
 		this.text = text;
