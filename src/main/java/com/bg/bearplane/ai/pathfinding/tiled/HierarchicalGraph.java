@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
 /** A {@code HierarchicalGraph} is a multilevel graph that can be traversed by a {@link HierarchicalPathFinder} at any level of its
  * hierarchy.

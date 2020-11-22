@@ -14,19 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-/** Graph interface representing a generic tiled map.
+/** A connection between two nodes of the {@link Graph}. The connection has a non-negative cost that often represents time or
+ * distance. However, the cost can be anything you want, for instance a combination of time, distance, and other factors.
  * 
- * @param <N> Type of node, either flat or hierarchical, extending the {@link TiledNode} class
+ * @param <N> Type of node
  * 
  * @author davebaol */
-public interface TiledGraph<N extends TiledNode<N>> extends IndexedGraph<N> {
+public interface Connection<N> {
 
-	//public void init (int roomCount, int roomMinSize, int roomMaxSize, int squashIterations);
+	/** Returns the non-negative cost of this connection */
+	public float getCost ();
 
-	public N getNode (int x, int y);
+	/** Returns the node that this connection came from */
+	public N getFromNode ();
 
-	public N getNode (int index);
+	/** Returns the node that this connection leads to */
+	public N getToNode ();
 
 }

@@ -14,29 +14,47 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-/** A {@code GraphPath} represents a path in a {@link Graph}. Note that a path can be defined in terms of nodes or
- * {@link Connection connections} so that multiple edges between the same pair of nodes can be discriminated.
+/**
+ * A {@code DefaultConnection} is a {@link Connection} whose cost is 1.
  * 
  * @param <N> Type of node
  * 
- * @author davebaol */
-public interface GraphPath<N> extends Iterable<N> {
+ * @author davebaol
+ */
+public class DefaultConnection<N> implements Connection<N> {
 
-	/** Returns the number of items of this path. */
-	public int getCount ();
+	protected N fromNode;
+	protected N toNode;
 
-	/** Returns the item of this path at the given index. */
-	public N get (int index);
+	float cost = 1f;
 
-	/** Adds an item at the end of this path. */
-	public void add (N node);
+	public boolean valid = true;
+	public int d = 0;
 
-	/** Clears this path. */
-	public void clear ();
+	public DefaultConnection(N fromNode, N toNode) {
+		this.fromNode = fromNode;
+		this.toNode = toNode;
+	}
 
-	/** Reverses this path. */
-	public void reverse ();
+	public void setCost(float s) {
+		cost = s;
+	}
+
+	@Override
+	public float getCost() {
+		return cost;
+	}
+
+	@Override
+	public N getFromNode() {
+		return fromNode;
+	}
+
+	@Override
+	public N getToNode() {
+		return toNode;
+	}
 
 }

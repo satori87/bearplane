@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BinaryHeap;

@@ -14,47 +14,19 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-/**
- * A {@code DefaultConnection} is a {@link Connection} whose cost is 1.
+/** Graph interface representing a generic tiled map.
  * 
- * @param <N> Type of node
+ * @param <N> Type of node, either flat or hierarchical, extending the {@link TiledNode} class
  * 
- * @author davebaol
- */
-public class DefaultConnection<N> implements Connection<N> {
+ * @author davebaol */
+public interface TiledGraph<N extends TiledNode<N>> extends IndexedGraph<N> {
 
-	protected N fromNode;
-	protected N toNode;
+	//public void init (int roomCount, int roomMinSize, int roomMaxSize, int squashIterations);
 
-	float cost = 1f;
+	public N getNode (int x, int y);
 
-	public boolean valid = true;
-	public int d = 0;
-
-	public DefaultConnection(N fromNode, N toNode) {
-		this.fromNode = fromNode;
-		this.toNode = toNode;
-	}
-
-	public void setCost(float s) {
-		cost = s;
-	}
-
-	@Override
-	public float getCost() {
-		return cost;
-	}
-
-	@Override
-	public N getFromNode() {
-		return fromNode;
-	}
-
-	@Override
-	public N getToNode() {
-		return toNode;
-	}
+	public N getNode (int index);
 
 }

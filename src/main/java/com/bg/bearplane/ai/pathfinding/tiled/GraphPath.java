@@ -14,29 +14,29 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-
-/** A Manhattan distance heuristic for a {@link TiledGraph}. It simply calculates the Manhattan distance between two given
- * tiles.
+/** A {@code GraphPath} represents a path in a {@link Graph}. Note that a path can be defined in terms of nodes or
+ * {@link Connection connections} so that multiple edges between the same pair of nodes can be discriminated.
  * 
- * @param <N> Type of node, either flat or hierarchical, extending the {@link TiledNode} class
+ * @param <N> Type of node
  * 
  * @author davebaol */
-public class TiledManhattanDistance<N extends TiledNode<N>> implements Heuristic<N> {
+public interface GraphPath<N> extends Iterable<N> {
 
-	public TiledManhattanDistance () {
-	}
+	/** Returns the number of items of this path. */
+	public int getCount ();
 
-	@Override
-	public float estimate (N n, N m) {
-		//return (float) BearTool.distance(n.x, n.y, m.x, m.y);
-		return Math.abs(m.x - n.x) + Math.abs(m.y - n.y);
-	}
-	
-	//@Override
-	//public float estimate (N node, N endNode) {
-	//	//return (float) BearTool.distance(n.x, n.y, m.x, m.y);
-	//	return Math.abs(endNode.x - node.x) + Math.abs(endNode.y - node.y);
-	//}
+	/** Returns the item of this path at the given index. */
+	public N get (int index);
+
+	/** Adds an item at the end of this path. */
+	public void add (N node);
+
+	/** Clears this path. */
+	public void clear ();
+
+	/** Reverses this path. */
+	public void reverse ();
+
 }

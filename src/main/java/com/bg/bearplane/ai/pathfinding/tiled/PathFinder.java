@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
 /** A {@code PathFinder} that can find a {@link GraphPath path} from one node in an arbitrary {@link Graph graph} to a goal node
  * based on information provided by that graph.

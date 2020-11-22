@@ -14,31 +14,19 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-/**
- * A connection for a {@link FlatTiledGraph}.
+import com.badlogic.gdx.utils.Array;
+
+/** A graph is a collection of nodes, each one having a collection of outgoing {@link Connection connections}.
  * 
- * @author davebaol
- */
-public class FlatTiledConnection extends DefaultConnection<FlatTiledNode> {
+ * @param <N> Type of node
+ * 
+ * @author davebaol */
+public interface Graph<N> {
 
-	static final float NON_DIAGONAL_COST = (float) Math.sqrt(2);
-
-	float cost = 1f;
-
-	
-	FlatTiledGraph worldMap;
-
-	public FlatTiledConnection(int d, FlatTiledGraph worldMap, FlatTiledNode fromNode, FlatTiledNode toNode, float cost) {
-		super(fromNode, toNode);
-		this.worldMap = worldMap;
-		this.cost = cost;
-		this.d = d;
-	}
-
-	@Override
-	public float getCost() {
-		return cost;
-	}
+	/** Returns the connections outgoing from the given node.
+	 * @param fromNode the node whose outgoing connections will be returned
+	 * @return the array of connections outgoing from the given node. */
+	public Array<DefaultConnection<N>> getConnections (N fromNode);
 }

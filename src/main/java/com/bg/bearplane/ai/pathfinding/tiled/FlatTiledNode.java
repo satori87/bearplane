@@ -14,19 +14,26 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
 import com.badlogic.gdx.utils.Array;
 
-/** A graph is a collection of nodes, each one having a collection of outgoing {@link Connection connections}.
- * 
- * @param <N> Type of node
+/** A node for a {@link FlatTiledGraph}.
  * 
  * @author davebaol */
-public interface Graph<N> {
+public class FlatTiledNode extends TiledNode<FlatTiledNode> {
 
-	/** Returns the connections outgoing from the given node.
-	 * @param fromNode the node whose outgoing connections will be returned
-	 * @return the array of connections outgoing from the given node. */
-	public Array<DefaultConnection<N>> getConnections (N fromNode);
+	int w, h;
+	
+	public FlatTiledNode (int x, int y, int w, int h) {
+		super(x, y, new Array<DefaultConnection<FlatTiledNode>>(4));
+		this.w = w;
+		this.h = h;
+	}
+
+	@Override
+	public int getIndex () {
+		return x * w + y;
+	}
+
 }

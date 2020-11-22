@@ -1,4 +1,4 @@
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
 public interface Pathfindable {
 
@@ -13,7 +13,5 @@ public interface Pathfindable {
 	public boolean isValidConnection(FlatTiledNode n, int dir, int xOffset, int yOffset);
 	
 	public float getConnectionCost(FlatTiledNode n, int dir, int xOffset, int yOffset);
-	
-	
 	
 }

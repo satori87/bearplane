@@ -14,26 +14,31 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.bg.bearplane.ai.pathfinding;
+package com.bg.bearplane.ai.pathfinding.tiled;
 
-import com.badlogic.gdx.utils.Array;
-
-/** A node for a {@link FlatTiledGraph}.
+/**
+ * A connection for a {@link FlatTiledGraph}.
  * 
- * @author davebaol */
-public class FlatTiledNode extends TiledNode<FlatTiledNode> {
+ * @author davebaol
+ */
+public class FlatTiledConnection extends DefaultConnection<FlatTiledNode> {
 
-	int w, h;
+	static final float NON_DIAGONAL_COST = (float) Math.sqrt(2);
+
+	float cost = 1f;
+
 	
-	public FlatTiledNode (int x, int y, int w, int h) {
-		super(x, y, new Array<DefaultConnection<FlatTiledNode>>(4));
-		this.w = w;
-		this.h = h;
+	FlatTiledGraph worldMap;
+
+	public FlatTiledConnection(int d, FlatTiledGraph worldMap, FlatTiledNode fromNode, FlatTiledNode toNode, float cost) {
+		super(fromNode, toNode);
+		this.worldMap = worldMap;
+		this.cost = cost;
+		this.d = d;
 	}
 
 	@Override
-	public int getIndex () {
-		return x * w + y;
+	public float getCost() {
+		return cost;
 	}
-
 }
