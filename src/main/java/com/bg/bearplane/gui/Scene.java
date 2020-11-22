@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -38,45 +37,20 @@ public abstract class Scene extends Frame {
 	public static boolean alting = false;
 	public static boolean ctrling = false;
 	public static boolean locked = false;
-	
+	static List<String> msgBoxMsgs = new LinkedList<String>();
+	static Frame msgBoxFrame;
+	static Button msgBoxOK;
+	static Scene lastScene = null;
+
 	public String id = "";
 	public boolean autoCenter = false;
 	public long startStamp = 0;
 	public boolean started = false;
 	public TreeMap<Integer, Focusable> focusList = new TreeMap<Integer, Focusable>();
 	Focusable focus;
-	
-	public abstract void enterPressedInList(String id);
 
-	public abstract void listChanged(String id, int sel);
+	//Lifecyle
 	
-	public abstract void buttonPressed(String id);
-	
-	public abstract void enterPressedInField(String id);
-	
-	public Focusable getFocus() {
-		return focus;
-	}
-	
-	public boolean setFocus(int tab) {
-		Focusable f = focusList.get(tab);
-		if(f != null) {
-			if(f.canFocus()) {
-				if(focus != null) {
-					focus.loseFocus();
-				}
-				focus = f;
-				focus.gainFocus();
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean shifting() {
-		return input.keyDown[Keys.SHIFT_LEFT] || input.keyDown[Keys.SHIFT_RIGHT];
-	}
-
 	public static void init() {
 		try {
 			input = new InputHandler();
@@ -87,14 +61,7 @@ public abstract class Scene extends Frame {
 
 		}
 	}
-	
-	public void registerTab(Focusable f) {
-		if(focusList.get(f.getTabIndex()) != null) {
-			Log.error("Duplicate tabIndex: " + id);
-		}
-		focusList.put(f.getTabIndex(), f);
-	}
-
+		
 	public static void updateScene() {
 		if (scene != null) {
 			if (!locked) {
@@ -119,17 +86,7 @@ public abstract class Scene extends Frame {
 		}
 		input.keyPress.clear();
 	}
-
-	public void deselectAllButtons() {
-		for (Button b : buttons.values()) {
-			if (!b.toggle) {
-				b.sel = false;
-				b.click = false;
-				b.justClicked = false;
-			}
-		}
-	}
-
+	
 	public void updateBase() {
 		try {
 			tick = System.currentTimeMillis();
@@ -165,39 +122,8 @@ public abstract class Scene extends Frame {
 		update();
 	}
 
-	public static void renderScene() {
-		try {
-			if (scene == null) {
-				return;
-			}
-			Gdx.gl.glClearColor(0, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			batcher.enableBlending();
-			batcher.begin();
-			scene.renderBase();
-			if (msgBoxFrame != null) {
-				msgBoxFrame.renderComponent();
-				String ss = msgBoxMsgs.get(0);
-				List<String> lines = Util.wrapText(2f, Bearplane.game.getGameWidth() / 2, ss);
-				int i = 0;
-				for (String s : lines) {
-					i++;
-					scene.drawFontAbs(0, Bearplane.game.getGameWidth() / 2,
-							Bearplane.game.getGameHeight() / 2 - 170 + i * 40, s, true, 2.0f);
-				}
-			}
-			batcher.end();
-			letterBox();
-		} catch (Exception e) {
-			Log.error(e);
-
-		}
-	}
-
-	public abstract void render();
-
 	public abstract void update();
-
+	
 	public void renderBase() {
 		try {
 			// overload only in some scenes
@@ -228,17 +154,78 @@ public abstract class Scene extends Frame {
 		}
 		render();
 	}
+	
+	public abstract void render();
 
-	public void mouseDown(int x, int y, int button) {
-		// non dialog, non button, non text touches. overload this in specific scene
+	public static void renderScene() {
+		try {
+			if (scene == null) {
+				return;
+			}
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batcher.enableBlending();
+			batcher.begin();
+			scene.renderBase();
+			if (msgBoxFrame != null) {
+				msgBoxFrame.renderComponent();
+				String ss = msgBoxMsgs.get(0);
+				List<String> lines = Util.wrapText(2f, Bearplane.game.getGameWidth() / 2, ss);
+				int i = 0;
+				for (String s : lines) {
+					i++;
+					scene.drawFontAbs(0, Bearplane.game.getGameWidth() / 2,
+							Bearplane.game.getGameHeight() / 2 - 170 + i * 40, s, true, 2.0f);
+				}
+			}
+			batcher.end();
+			letterBox();
+		} catch (Exception e) {
+			Log.error(e);
+
+		}
 	}
 
-	public void mouseUp(int x, int y, int button) {
-		// non dialog, non button, non text touches. overload this in specific scene
+	//Scene management
+	
+	public static void change(String to) {
+		try {
+			input.wasMouseJustClicked[0] = false;
+			Scene s = scenes.get(to);
+			if (s != null) {
+				lastScene = scene;
+				scene = s;
+				if (!scene.started) {
+					scene.start();
+				}
+				scene.switchTo();
+			}
+		} catch (Exception e) {
+			Log.error(e);
+
+		}
 	}
 
-	public void checkBox(String id) {
-		// overload this to get notified of checkbox activity
+	public static Scene get(String get) {
+		return scenes.get(get);
+	}
+
+	public static void addScene(String id, Scene s) {
+		scenes.put(id, s);
+		s.id = id;
+	}
+
+	public void switchTo() {
+		// overload this if you want to
+
+	}
+
+	public static void lock() {
+		locked = true;
+	}
+
+	public static void unlock() {
+		locked = false;
 	}
 
 	public void clear() {
@@ -261,6 +248,20 @@ public abstract class Scene extends Frame {
 		} catch (Exception e) {
 			Log.error(e);
 
+		}
+	}
+
+	//Component management
+	
+	public void msgBox(String s) {
+		msgBoxMsgs.add(s);
+		lock();
+		if (msgBoxFrame == null) {
+			int gw = Bearplane.game.getGameWidth();
+			int gh = Bearplane.game.getGameHeight();
+			msgBoxFrame = new Frame(this, "frame", gw / 2, gh / 2, 750, 384, true, true, true);
+			msgBoxOK = new Button(this, "ok", gw / 2, gh / 2 + 128, 128, 48, "OK", false);
+			msgBoxFrame.buttons.put("ok", msgBoxOK);
 		}
 	}
 
@@ -303,6 +304,44 @@ public abstract class Scene extends Frame {
 		}
 	}
 
+	public Focusable getFocus() {
+		return focus;
+	}
+	
+	public boolean setFocus(int tab) {
+		Focusable f = focusList.get(tab);
+		if(f != null) {
+			if(f.canFocus()) {
+				if(focus != null) {
+					focus.loseFocus();
+				}
+				focus = f;
+				focus.gainFocus();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void registerTab(Focusable f) {
+		if(focusList.get(f.getTabIndex()) != null) {
+			Log.error("Duplicate tabIndex: " + id);
+		}
+		focusList.put(f.getTabIndex(), f);
+	}
+
+	public void deselectAllButtons() {
+		for (Button b : buttons.values()) {
+			if (!b.toggle) {
+				b.sel = false;
+				b.click = false;
+				b.justClicked = false;
+			}
+		}
+	}
+
+	//Graphical
+	
 	public void clip(int x, int y, int width, int height) {
 		try {
 			batcher.flush();
@@ -577,22 +616,6 @@ public abstract class Scene extends Frame {
 		}
 	}
 
-	static List<String> msgBoxMsgs = new LinkedList<String>();
-	static Frame msgBoxFrame;
-	static Button msgBoxOK;
-
-	public void msgBox(String s) {
-		msgBoxMsgs.add(s);
-		lock();
-		if (msgBoxFrame == null) {
-			int gw = Bearplane.game.getGameWidth();
-			int gh = Bearplane.game.getGameHeight();
-			msgBoxFrame = new Frame(this, "frame", gw / 2, gh / 2, 750, 384, true, true, true);
-			msgBoxOK = new Button(this, "ok", gw / 2, gh / 2 + 128, 128, 48, "OK", false);
-			msgBoxFrame.buttons.put("ok", msgBoxOK);
-		}
-	}
-
 	public static void setupScreen(float gameWidth, float gameHeight) {
 		try {
 			Log.debug("Set screen");
@@ -633,46 +656,20 @@ public abstract class Scene extends Frame {
 		}
 	}
 
-	public static Scene lastScene = null;
+	//Input
+	
+	public abstract void enterPressedInList(String id);
 
-	public static void change(String to) {
-		try {
-			input.wasMouseJustClicked[0] = false;
-			Scene s = scenes.get(to);
-			if (s != null) {
-				lastScene = scene;
-				scene = s;
-				if (!scene.started) {
-					scene.start();
-				}
-				scene.switchTo();
-			}
-		} catch (Exception e) {
-			Log.error(e);
+	public abstract void listChanged(String id, int sel);
+	
+	public abstract void buttonPressed(String id);
+	
+	public abstract void enterPressedInField(String id);
 
-		}
-	}
+	public abstract void mouseDown(int x, int y, int button);
 
-	public static Scene get(String get) {
-		return scenes.get(get);
-	}
-
-	public static void addScene(String id, Scene s) {
-		scenes.put(id, s);
-		s.id = id;
-	}
-
-	public void switchTo() {
-		// overload this if you want to
-
-	}
-
-	public static void lock() {
-		locked = true;
-	}
-
-	public static void unlock() {
-		locked = false;
-	}
+	public abstract void mouseUp(int x, int y, int button);
+	
+	public abstract void checkBox(String id);
 
 }
