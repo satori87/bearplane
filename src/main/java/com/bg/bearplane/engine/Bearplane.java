@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.bg.bearplane.gui.Scene;
 import com.bg.bearplane.net.NetworkRegistrar;
@@ -49,7 +50,7 @@ public class Bearplane extends com.badlogic.gdx.Game {
 		try {
 			game.create();
 			Scene.init();
-			if (game instanceof TCPClient) {
+			if (game instanceof TCPClient && network != null) {
 				TCPClient c = (TCPClient) game;
 				network.registerClasses(c.client);
 			}
@@ -65,6 +66,10 @@ public class Bearplane extends com.badlogic.gdx.Game {
 		} catch (Exception e) {
 			Log.error(e);
 		}
+	}
+	
+	public static void createApplication(Bearplane engine) {
+		new LwjglApplication(engine, engine.getApplicationConfiguration());		
 	}
 
 	@Override
@@ -139,7 +144,7 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			cfg.x = 0;
 			cfg.y = 0;
 	        cfg.resizable = false;
-	        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+	        cfg.undecorated = true;
 	        cfg.vSyncEnabled = game.isvSync();
 	        cfg.fullscreen = dm == DisplayMode.FULLSCREEN;
 			if (cfg.fullscreen) {

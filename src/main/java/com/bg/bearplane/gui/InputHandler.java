@@ -88,9 +88,10 @@ public class InputHandler implements InputProcessor {
 	}
 
 	@Override
-	public boolean scrolled(int amount) {
-		scrolls.addLast(amount);
-		return false;
+	public boolean scrolled(float x, float y) {
+		scrolls.addLast((int)y);
+		//1.9.12 might have broken this! come back and check. it used to be an int now its a float
+		return true;
 	}
 
 	@Override

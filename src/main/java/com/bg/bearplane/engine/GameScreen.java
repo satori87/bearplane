@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
 			if (game instanceof TCPClient) {
 				TCPClient c = (TCPClient) game;
 				c.processPacketQueue();
-			}			
+			}
 			game.update();
 			Scene.renderScene();
 		} catch (Exception e) {

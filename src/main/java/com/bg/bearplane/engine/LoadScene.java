@@ -60,4 +60,22 @@ public class LoadScene extends Scene {
 		
 	}
 
+	@Override
+	public void mouseDown(int x, int y, int button) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseUp(int x, int y, int button) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkBox(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
