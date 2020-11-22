@@ -21,6 +21,9 @@ public class Frame extends Component {
 
 	Frame parent = null;
 
+	public Frame() {
+		
+	}
 	
 	public Frame(Scene scene) {
 		x = 0;
@@ -45,68 +48,62 @@ public class Frame extends Component {
 	public Frame(Scene scene, String id, int x, int y, int width, int height, boolean useBackground, boolean centered) {
 		this(scene, id, x, y, width, height, useBackground, centered, true);
 	}
-
-	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text) {
-		return addButton(scene, id, x, y, width, height, text);
-	}
-
-	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text, boolean toggle) {
-		return buttons.put(id, new Button(scene, id, x, y, width, height, text, toggle));
-	}
 	
+
+	public Button addButton(String id, int x, int y, int width, int height, String text) {
+		return addButton(id, x, y, width, height, text, false);
+	}
+
+	public Button addButton(String id, int x, int y, int width, int height, String text, boolean toggle) {
+		return buttons.put(id, new Button((Scene)this, id, x, y, width, height, text, toggle));
+	}
+
 	public static Button getButton(HashMap<String, Button> buttons, String id) {
 		return buttons.get(id);
 	}
-	
+
 	public Button getButton(String id) {
 		return buttons.get(id);
 	}
-	
-	public Frame addFrame(Scene scene, String id, int x, int y, int w, int h, boolean bg, boolean center) {
-		return frames.put(id, new Frame(scene, id, x, y, w, h, bg, center));
+
+	public Frame addFrame(String id, int x, int y, int w, int h, boolean bg, boolean center) {
+		return frames.put(id, new Frame((Scene)this, id, x, y, w, h, bg, center));
 	}
-	
+
 	public Frame getFrame(String id) {
 		return frames.get(id);
 	}
-	
+
 	public Frame getFrame(HashMap<String, Frame> frames, String id) {
 		return frames.get(id);
 	}
-	
-	public Label addLabel(Scene scene, String id, int x, int y, float s, String t, Color c, boolean center) {
-		return labels.put(id, new Label(scene,id,x,y,s,t,c,center));
+
+	public Label addLabel(String id, int x, int y, float s, String t, Color c, boolean center) {
+		return labels.put(id, new Label((Scene)this, id, x, y, s, t, c, center));
 	}
-	
+
 	public static Label getLabel(HashMap<String, Label> labels, String id) {
 		return labels.get(id);
 	}
-	
+
 	public Label getLabel(String id) {
 		return labels.get(id);
 	}
+
+	public Field addField(String id, int max, int tab, int x, int y, int width, boolean centered,
+			Frame frame) {
+		Field f = new Field((Scene)this, id, max, tab, x, y, width, centered, frame);
+		fields.put(id,  f);
+		((Scene)this).registerTab(f);
+		return f;
+	}
+
+	public Field addField(String id, int max, int tab, int x, int y, int width, boolean centered) {
+		return addField(id, max, tab, x, y, width, centered, null);
+	}
 	
-	void nexhtFocus() {
-		if (fields.size() > 0) {
-			boolean f = false;
-			for (Field t : fields.values()) {
-				if (t.focus) {
-					f = true;
-				}
-			}
-			if (f) {
-				if (fields.keySet().toArray()[focus] != null) {
-					fields.get(focus).focus = false;
-				}
-				focus++;
-				if (focus >= fields.size()) {
-					focus = 0;
-				}
-				if (fields.get(focus) != null) {
-					fields.get(focus).focus = true;
-				}
-			}
-		}
+	public Field addField(String id, int max, int tab, int x, int y, int width) {
+		return addField(id, max, tab, x, y, width, false, null);
 	}
 
 	public void update() {

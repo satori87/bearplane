@@ -1,13 +1,9 @@
 package com.bg.bearplane.gui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-
+import java.util.TreeMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -24,16 +20,10 @@ import com.bg.bearplane.engine.Bearplane;
 import com.bg.bearplane.engine.Util;
 import com.bg.bearplane.engine.Log;
 
-public abstract class Scene {
+public abstract class Scene extends Frame {
 
 	public static HashMap<String, Scene> scenes = new HashMap<String, Scene>();
 	public static Scene scene;
-
-	// To use: in game class, call Scene.init(), then Scene.updateScene() and
-	// Scene.renderScene()
-	// Scenes have to be added with addScene(name, Scene)
-
-	// libgdx stuff
 	private static float screenWidth, screenHeight;
 	public static float viewWidth, viewHeight;
 	public static int originX, originY;
@@ -41,44 +31,46 @@ public abstract class Scene {
 	public static OrthographicCamera curCam;
 	private static ShapeRenderer shapeRenderer;
 	public static SpriteBatch batcher;
-
 	public static InputHandler input;
-
 	public static long lastRepeat = 0;
 	public static long tick = 0;
-
-	public boolean shifting = false;
-	public boolean alting = false;
-	public boolean ctrling = false;
-
+	public static boolean shifting = false;
+	public static boolean alting = false;
+	public static boolean ctrling = false;
+	public static boolean locked = false;
+	
+	public String id = "";
 	public boolean autoCenter = false;
-
-	// iface stuff
-	public HashMap<String, Frame> frames = new HashMap<String, Frame>();
-	public HashMap<String, Button> buttons = new HashMap<String, Button>();
-	public HashMap<String, Label> labels = new HashMap<String, Label>();
-	public HashMap<String, Field> fields = new HashMap<String, Field>();
-	public HashMap<String, CheckBox> checkBoxes = new HashMap<String, CheckBox>();
-	public HashMap<String, Window> windows = new HashMap<String, Window>();
-	public HashMap<String, ListBox> listBoxes = new HashMap<String, ListBox>();
-
 	public long startStamp = 0;
 	public boolean started = false;
+	public TreeMap<Integer, Focusable> focusList = new TreeMap<Integer, Focusable>();
+	Focusable focus;
+	
+	public abstract void enterPressedInList(String id);
 
+	public abstract void listChanged(String id, int sel);
+	
 	public abstract void buttonPressed(String id);
-
+	
 	public abstract void enterPressedInField(String id);
-
-	//int focus;
-
-	public static boolean locked = false;
-
-	public void enterPressedInList(String id) {
-
+	
+	public Focusable getFocus() {
+		return focus;
 	}
-
-	public void listChanged(String id, int sel) {
-
+	
+	public boolean setFocus(int tab) {
+		Focusable f = focusList.get(tab);
+		if(f != null) {
+			if(f.canFocus()) {
+				if(focus != null) {
+					focus.loseFocus();
+				}
+				focus = f;
+				focus.gainFocus();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static boolean shifting() {
@@ -95,80 +87,12 @@ public abstract class Scene {
 
 		}
 	}
-
-	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text) {
-		return addButton(scene, id, x, y, width, height, text, false);
-	}
-
-	public Button addButton(Scene scene, String id, int x, int y, int width, int height, String text, boolean toggle) {
-		return buttons.put(id, new Button(scene, id, x, y, width, height, text, toggle));
-	}
 	
-	public static Button getButton(HashMap<String, Button> buttons, String id) {
-		return buttons.get(id);
-	}
-	
-	public Button getButton(String id) {
-		return buttons.get(id);
-	}
-	
-	public Frame addFrame(Scene scene, String id, int x, int y, int w, int h, boolean bg, boolean center) {
-		return frames.put(id, new Frame(scene, id, x, y, w, h, bg, center));
-	}
-	
-	public Frame getFrame(String id) {
-		return frames.get(id);
-	}
-	
-	public Frame getFrame(HashMap<String, Frame> frames, String id) {
-		return frames.get(id);
-	}
-	
-	public Label addLabel(Scene scene, String id, int x, int y, float s, String t, Color c, boolean center) {
-		return labels.put(id, new Label(scene,id,x,y,s,t,c,center));
-	}
-	
-	public static Label getLabel(HashMap<String, Label> labels, String id) {
-		return labels.get(id);
-	}
-	
-	public Label getLabel(String id) {
-		return labels.get(id);
-	}
-	
-	public Field addField(Scene scene, String id, int max, boolean focus, int x, int y, int width, boolean centered, Frame frame) {
-		return fields.put(id, new Field(scene, id, max, focus, x, y, width, centered,frame));
-	}
-	
-	public Field addField(Scene scene, String id, int max, boolean focus, int x, int y, int width, boolean centered) {
-		return addField(scene, id, max, focus, x,y,width,centered,null);
-	}
-	
-	public Field addField(Frame f,String id,  String name, int maxLength, boolean allowLetters) {
-		int w = 100;
-		f.addLabel(this, id, modX + 10 + c * cW, modY + 110 + r * 60, 1f, name + ":", Color.WHITE, false);
-		Field t = addField(this, id, maxLength, false, modX + 120 + c * cW, modY + 70 + r * 60, w, false);
-		t.allowLetters = allowLetters;
-		r++;
-		return t;
-	}
-
-	public List<Button> addRadio(Frame f, String[] names, String[] ids, int w, int h) {
-		int count = 0;
-		List<Button> bl = new ArrayList<Button>();
-		Button b;
-		for (String i : ids) {
-			b = f.addButton(this, i, modX + 40 + c * cW + count * (w + 4), modY + 116 + r * 60, w, h, names[count]);
-			b.toggle = true;
-			count++;
-			bl.add(b);
+	public void registerTab(Focusable f) {
+		if(focusList.get(f.getTabIndex()) != null) {
+			Log.error("Duplicate tabIndex: " + id);
 		}
-		r++;
-		return bl;
-	}
-
-	public Field addField(Frame f, String id, String name, int maxLength) {
-		return addField(f, id, name, maxLength, false);
+		focusList.put(f.getTabIndex(), f);
 	}
 
 	public static void updateScene() {
@@ -238,6 +162,7 @@ public abstract class Scene {
 			Log.error(e);
 
 		}
+		update();
 	}
 
 	public static void renderScene() {
@@ -268,9 +193,9 @@ public abstract class Scene {
 
 		}
 	}
-	
+
 	public abstract void render();
-	
+
 	public abstract void update();
 
 	public void renderBase() {
@@ -301,6 +226,7 @@ public abstract class Scene {
 		if (autoCenter) {
 			moveCameraTo(Bearplane.game.getGameWidth() / 2, Bearplane.game.getGameHeight() / 2);
 		}
+		render();
 	}
 
 	public void mouseDown(int x, int y, int button) {
@@ -322,6 +248,8 @@ public abstract class Scene {
 		labels.clear();
 		fields.clear();
 		checkBoxes.clear();
+		focusList.clear();
+		focus = null;
 		startStamp = tick;
 	}
 
@@ -336,75 +264,41 @@ public abstract class Scene {
 		}
 	}
 
-	public void addButtons(int x, int y, int width, int height, int padding, String[] text, String[] ids, boolean up,
-			boolean toggle) {
-		int n = text.length;
-		int bX = x;
-		int bY = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
-		if (n % 2 != 0) {
-			if (up) {
-				bY += (padding + height) / 2;
-			} else {
-				bX += (width + padding);
-			}
-		}
-		for (int c = 0; c < n; c++) {
-			buttons.put(ids[c], new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
-			if (up) {
-				bY += (height + padding);
-			} else {
-				bX += (width + padding);
-			}
-		}
-	}
-
-	public void addButtons(HashMap<String, Button> buttons, int x, int y, int width, int height, int padding,
-			String[] text, String[] ids, boolean up, boolean toggle) {
-		int n = text.length;
-		int bX = x;
-		int bY = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
-		// if (!up) {
-		// bY = x;
-		// bX = y - (padding / 2) - (height / 2) - (((n - 1) / 2) * (padding + height));
-		// }
-		if (n % 2 != 0) {
-			if (up) {
-				// bY += (padding + height) / 2;
-			} else {
-				bX += (width + padding);
-			}
-		}
-		for (int c = 0; c < n; c++) {
-			buttons.put(ids[c], new Button(this, ids[c], bX, bY, width, height, text[c], toggle));
-			if (up) {
-				// bY += (height + padding);
-			} else {
-				bX += (width + padding);
-			}
-		}
-	}
-
 	void nextFocus() {
-		if (fields.size() > 0) {
-			boolean f = false;
-			for (Field t : fields.values()) {
-				if (t.focus) {
-					f = true;
-				}
+		if(focus == null) {
+			if(!focusList.isEmpty()) {
+				setFocus(focusList.firstKey());
 			}
-			if (f) {
-				if (fields.get(focus) != null) {
-					fields.get(focus).focus = false;
+		} else {
+			if(focusList.size() > 1) {
+				boolean found = false;
+				if(shifting) {
+					for(int i = focus.getTabIndex() - 1; i >= focusList.firstKey(); i--) {
+						if(!found && setFocus(i)) {
+							found = true;
+						}
+					}
+					if(!found) {
+						for(int i = focusList.lastKey(); i > focus.getTabIndex(); i--) {
+							if(!found && setFocus(i)) {
+								found = true;
+							}
+						}
+					}
+				} else {
+					for(int i = focus.getTabIndex() + 1; i <= focusList.lastKey(); i++) {
+						if(!found && setFocus(i)) {
+							found = true;
+						}
+					}
+					if(!found) {
+						for(int i = focusList.firstKey(); i < focus.getTabIndex(); i++) {
+							if(!found && setFocus(i)) {
+								found = true;
+							}
+						}
+					}
 				}
-				focus++;
-				if (focus >= fields.size()) {
-					focus = 0;
-				}
-				if (fields.get(focus) != null) {
-					fields.get(focus).focus = true;
-				}
-			} else {
-				Log.warn("Scene.nextFocus() did a funny thing?");
 			}
 		}
 	}
@@ -699,17 +593,6 @@ public abstract class Scene {
 		}
 	}
 
-	public static void BADmsgBox(String s) {
-		try {
-			final JDialog dialog = new JDialog();
-			dialog.setAlwaysOnTop(true);
-			JOptionPane.showMessageDialog(dialog, s, "Odyssey", JOptionPane.OK_OPTION);
-		} catch (Exception e) {
-			Log.error(e);
-
-		}
-	}
-
 	public static void setupScreen(float gameWidth, float gameHeight) {
 		try {
 			Log.debug("Set screen");
@@ -774,8 +657,9 @@ public abstract class Scene {
 		return scenes.get(get);
 	}
 
-	public static void addScene(String name, Scene s) {
-		scenes.put(name, s);
+	public static void addScene(String id, Scene s) {
+		scenes.put(id, s);
+		s.id = id;
 	}
 
 	public void switchTo() {
@@ -790,11 +674,5 @@ public abstract class Scene {
 	public static void unlock() {
 		locked = false;
 	}
-
-	public int r = 0;
-	public int c = 0;
-	public int cW = 250;
-	public int modX = 0;
-	public int modY = 0;
 
 }

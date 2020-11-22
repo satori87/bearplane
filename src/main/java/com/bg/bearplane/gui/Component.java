@@ -12,6 +12,8 @@ public abstract class Component {
 	public int height = 32;
 	long stamp = 0;
 
+	Frame frame;
+	
 	long tick = 0;
 
 	public boolean visible = true;
@@ -48,5 +50,31 @@ public abstract class Component {
 			render();
 		}
 	}
+	
+	public boolean canFocus() {
+		if(visible && !disabled) {
+			Frame f = frame;			
+			do {
+				if(f != null) {
+					if(f.visible && !f.disabled) {
+						if(f.parent != null) {
+							f = f.parent;
+						} else {
+							return true;
+						}
+					} else {
+						return false;
+					}
+				} else {
+					return true;
+				}
+			} while (f != null);
+		}
+		return false;
+	}
 
+	public String getID() {
+		return id;
+	}
+	
 }

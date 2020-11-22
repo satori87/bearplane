@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.bg.bearplane.engine.Bearplane;
 import com.bg.bearplane.engine.Log;
 
-public class Field extends Component {
+public class Field extends Component implements Focusable {
 
 	//public boolean focus = false;
 	public boolean blink = false;
@@ -22,11 +22,13 @@ public class Field extends Component {
 
 	public boolean password = false;
 
-	public Frame frame = null;
-
 	public boolean neg = false;
+	
+	public int tabIndex = 0;
+	
+	public boolean focus = false;
 
-	public Field(Scene scene, String id, int max, int x, int y, int width, boolean centered,
+	public Field(Scene scene, String id, int max, int tab, int x, int y, int width, boolean centered,
 			Frame frame) {
 		super(scene, id, x, y + 16);
 		this.max = max;
@@ -35,10 +37,11 @@ public class Field extends Component {
 			this.x -= width / 2;
 		}
 		this.width = width;
+		tabIndex = tab;
 	}
 
-	public Field(Scene scene, String id, int max, int x, int y, int width, boolean centered) {
-		this(scene, id, max, x, y, width, centered, null);
+	public Field(Scene scene, String id, int max, int tab, int x, int y, int width, boolean centered) {
+		this(scene, id, max, tab, x, y, width, centered, null);
 	}
 
 	static public boolean inCentered(int x, int y, int centerX, int centerY, int width, int height) {
@@ -63,14 +66,14 @@ public class Field extends Component {
 			if (Scene.input.wasMouseJustClicked[0]) {
 				if (inBox(mX, mY, x, x + width, y - 7, y + 10 + 36)) {
 					Scene.input.wasMouseJustClicked[0] = false;
-					scene.setFocus(id);					
+					scene.setFocus(tabIndex);					
 				}
 			}
 			if (tick > blinkStamp) {
 				blink = !blink;
 				blinkStamp = tick + 400;
 			}
-			if (hasFocus()) {
+			if (focus) {
 				processKeys(max);
 			} else {
 			}
@@ -124,11 +127,7 @@ public class Field extends Component {
 				}
 				break;
 			case Input.Keys.TAB:
-				if (frame == null) {
-					scene.nextFocus();
-				} else {
-					frame.nextFocus();
-				}
+				scene.nextFocus();				
 				break;
 			case Input.Keys.ENTER:
 				scene.enterPressedInField(id);
@@ -302,10 +301,6 @@ public class Field extends Component {
 			
 		}
 	}
-	
-	public boolean hasFocus() {
-		return Scene.getFocus().equals(id);
-	}
 
 	public void render() {
 		try {
@@ -329,7 +324,7 @@ public class Field extends Component {
 				scene.drawFont(0, sx + x + width / 2, y + 28 - 2, text, true, 1.6f, Color.WHITE);
 				len = Bearplane.assets.getStringWidth(text, 1.6f, 1, 0);
 			}
-			if (hasFocus() && blink) {
+			if (focus && blink) {
 				scene.drawFont(0, sx + (int) (x + width / 2 + len / 2), y + 28 - 2, "|", true, 1.6f, Color.WHITE);
 			}
 		} catch (
@@ -339,5 +334,25 @@ public class Field extends Component {
 			
 		}
 	}
+
+	@Override
+	public void gainFocus() {
+		focus = true;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loseFocus() {
+		focus = false;
+		// TODO verify integrity of data here? for example, if field is empty and does not allow letters then automatically change to '0'
+		
+	}
+
+	@Override
+	public int getTabIndex() {
+		return tabIndex;
+	}
+	
 
 }

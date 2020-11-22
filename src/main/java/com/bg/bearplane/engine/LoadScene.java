@@ -48,4 +48,16 @@ public class LoadScene extends Scene {
 		
 	}
 
+	@Override
+	public void enterPressedInList(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void listChanged(String id, int sel) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
