@@ -7,6 +7,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.bg.bearplane.gui.Scene;
+import com.bg.bearplane.net.BearNet;
 import com.bg.bearplane.net.NetworkRegistrar;
 import com.bg.bearplane.net.TCPClient;
 import com.esotericsoftware.kryo.util.IntMap;
@@ -20,12 +21,14 @@ public class Bearplane extends com.badlogic.gdx.Game {
 	
 	public static IntMap<Timer> timers = new IntMap<Timer>();
 
-	public Bearplane(Bearable theGame, String[] args) {		
+	public Bearplane(Bearable bearableGame, String[] args) {		
 		super();		
-		game = theGame;		
+		game = bearableGame;		
 		assets = game.getAssets();
 		Log.init(args);
-		this.network = (NetworkRegistrar)game.getNetwork();
+		if(game instanceof TCPClient)  {
+			network = (NetworkRegistrar)((BearNet)game).getNetwork();
+		}
 	}
 
 	public static BaseConfig loadConfig(String filename, BaseConfig config) {
@@ -120,20 +123,22 @@ public class Bearplane extends com.badlogic.gdx.Game {
 	}
 
 	public LwjglApplicationConfiguration getApplicationConfiguration() {
-		String name = game.getGameName();
-		int windowWidth;
-		int windowHeight;
-		int dm = game.getDisplayMode();
-		Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();	
-		if(dm == DisplayMode.WINDOW) {
-			windowWidth = game.getWindowWidth();
-			windowHeight = game.getWindowHeight();
-		} else {			
-			windowWidth = dimension.width;
-			windowHeight = dimension.height;
-		}		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		try {
+			String name = game.getGameName();
+			int windowWidth;
+			int windowHeight;
+			int dm = game.getDisplayMode();
+			Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();				
+			if(dm == DisplayMode.WINDOW) {
+				cfg.undecorated = false;
+				windowWidth = game.getWindowWidth();
+				windowHeight = game.getWindowHeight();				
+			} else {			
+				cfg.undecorated = true;
+				windowWidth = dimension.width;
+				windowHeight = dimension.height;
+			}		
 			cfg.addIcon(game.getAssetsPath() + "/icon.png", FileType.Local);
 			cfg.title = name;
 			cfg.width = windowWidth;
@@ -143,8 +148,7 @@ public class Bearplane extends com.badlogic.gdx.Game {
 			cfg.y = screenSize.height / 2 - cfg.height / 2 - 32;
 			cfg.x = 0;
 			cfg.y = 0;
-	        cfg.resizable = false;
-	        cfg.undecorated = true;
+	        cfg.resizable = false;	        
 	        cfg.vSyncEnabled = game.isvSync();
 	        cfg.fullscreen = dm == DisplayMode.FULLSCREEN;
 			if (cfg.fullscreen) {

@@ -40,8 +40,6 @@ public interface Bearable {
 	
 	public BaseAssets getAssets();
 	
-	public Object getNetwork();
-	
 	public boolean isRelease();
 	
 	public BaseRealm getRealm();

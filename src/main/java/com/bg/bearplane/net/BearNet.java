@@ -6,4 +6,5 @@ public interface BearNet {
 	public void clientConnected();
 	public void clientDisconnected();
 	
+	public Object getNetwork();
 }
